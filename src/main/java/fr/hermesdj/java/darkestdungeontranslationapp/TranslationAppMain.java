@@ -76,7 +76,8 @@ public class TranslationAppMain {
 	private void initializeProperties() {
 		TranslationAppConfigurationManager conf = TranslationAppConfigurationManager
 				.getInstance();
-		conf.loadFromFile(new File("translationapp.conf"));
+		File saveFile = new File("translationapp.conf");
+		conf.loadFromFile(saveFile);
 
 		sourceDirectory = new File(
 				conf.getProperty(ConfigurationKey.TRANSLATION_FILES_LOCATION));
@@ -94,6 +95,9 @@ public class TranslationAppMain {
 
 			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				sourceDirectory = chooser.getSelectedFile();
+				conf.setProperty(ConfigurationKey.TRANSLATION_FILES_LOCATION,
+						sourceDirectory.getAbsolutePath());
+				conf.saveToFile(saveFile);
 				System.out.println("Picked directory is : " + sourceDirectory);
 			} else {
 				System.out.println("No selection");
