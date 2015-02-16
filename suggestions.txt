@@ -1,0 +1,9 @@
+- coloriser la zone à traduire et la zone de traduction
+- s'inspirer de poedit pour l'ihm
+- nom du fichier en titre
+- ajouter l'id
+- ajout status bar avec stats de progression traduction et logs
+- Bouton copier l'original
+- gestion du temps de latence dans les gros fichiers
+- Champ de recherche original/translation
+- Ajout d'une checkbox pour "vérifier"
