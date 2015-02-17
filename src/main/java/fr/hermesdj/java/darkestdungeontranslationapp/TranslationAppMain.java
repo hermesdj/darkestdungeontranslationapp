@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -217,6 +218,14 @@ public class TranslationAppMain extends JFrame {
 				acceptTranslation();
 			}
 		};
+		
+		Action acceptTranslationHintAction = new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				translatedTextArea.setText(hintArea.getText());
+			}
+		};
 
 		Action showHintAction = new AbstractAction() {
 
@@ -225,9 +234,9 @@ public class TranslationAppMain extends JFrame {
 					hintArea.setBackground(new Color(224, 224, 224));
 					hintArea.setText(Translate.execute(
 							originalTextArea.getText(),
-							Language.fromString(translation_language
+							Language.valueOf(original_language
 									.toUpperCase()),
-							Language.fromString(original_language.toUpperCase())));
+									Language.valueOf(translation_language.toUpperCase())));
 					hintArea.setBackground(new Color(229, 255, 204));
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -238,6 +247,8 @@ public class TranslationAppMain extends JFrame {
 		};
 
 		// Configure Menu
+		
+		// FICHIER
 		JMenu fileMenu = new JMenu("Fichier");
 		JMenuItem openFile = new JMenuItem("Dossier...", new ImageIcon(
 				getClass().getResource("/images/folder.png")));
@@ -275,6 +286,7 @@ public class TranslationAppMain extends JFrame {
 		fileMenu.add(exit);
 		menuBar.add(fileMenu);
 
+		// MODIFIER
 		JMenu modifier = new JMenu("Modifier");
 		menuBar.add(modifier);
 
@@ -287,13 +299,12 @@ public class TranslationAppMain extends JFrame {
 				KeyEvent.VK_ENTER, 0));
 		modifier.add(acceptTranslationItem);
 
-		JMenuItem clearTranslationItem = new JMenuItem("Vider la Traduction",
+		JMenuItem clearTranslationItem = new JMenuItem("Supprimer la Traduction",
 				new ImageIcon(getClass().getResource("/images/delete.png")));
 		clearTranslationItem.setPreferredSize(new Dimension(250, 20));
 		clearTranslationItem.addActionListener(clearTranslation);
 		clearTranslationItem.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_BACK_SPACE, Toolkit.getDefaultToolkit()
-						.getMenuShortcutKeyMask()));
+				KeyEvent.VK_DELETE, KeyEvent.ALT_MASK));
 		modifier.add(clearTranslationItem);
 
 		JMenuItem translationHintMenu = new JMenuItem(
@@ -302,9 +313,18 @@ public class TranslationAppMain extends JFrame {
 		translationHintMenu.setPreferredSize(new Dimension(250, 20));
 		translationHintMenu.addActionListener(showHintAction);
 		translationHintMenu.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_F1, Toolkit.getDefaultToolkit()
-						.getMenuShortcutKeyMask()));
+				KeyEvent.VK_ENTER, KeyEvent.ALT_MASK));
 		modifier.add(translationHintMenu);
+		
+		JMenuItem acceptTranslationHintMenu = new JMenuItem(
+				"Accepter Suggestion", new ImageIcon(getClass()
+						.getResource("/images/lightbulb_add.png")));
+		acceptTranslationHintMenu.setPreferredSize(new Dimension(250, 20));
+		acceptTranslationHintMenu.addActionListener(acceptTranslationHintAction);
+		acceptTranslationHintMenu.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_ENTER, Toolkit.getDefaultToolkit()
+				.getMenuShortcutKeyMask()));
+		modifier.add(acceptTranslationHintMenu);
 		modifier.add(new JSeparator());
 
 		JMenuItem suivantMenu = new JMenuItem("Suivant", new ImageIcon(
@@ -493,13 +513,19 @@ public class TranslationAppMain extends JFrame {
 		getHintBtn.addActionListener(showHintAction);
 		translationToolBar.add(getHintBtn);
 		translationToolBar.setFloatable(false);
+		
+		JButton copyHintBtn = new JButton(new ImageIcon(getClass().getResource(
+				"/images/lightbulb_add.png")));
+		copyHintBtn
+				.setToolTipText("Copier la traduction propos\u00e9e dans la champ en cours.");
+		copyHintBtn.addActionListener(acceptTranslationHintAction);
+		translationToolBar.add(copyHintBtn);
 
 		translationArea.add(translationToolBar, BorderLayout.LINE_START);
 		hintArea = new JTextArea();
 		hintArea.setBackground(new Color(224, 224, 224));
 		hintArea.setPreferredSize(new Dimension(200, 200));
 		hintArea.setLineWrap(true);
-		hintArea.setEnabled(false);
 		hintArea.setDisabledTextColor(Color.BLACK);
 
 		translationArea.add(hintArea, BorderLayout.EAST);
@@ -518,7 +544,7 @@ public class TranslationAppMain extends JFrame {
 		translatedTextArea
 				.setToolTipText("SHIFT+ENTER pour revenir \u00e0 la ligne.\n ENTER pour valider la traduction et passer automatiquement \u00e0 la suivante.\n PAGE-UP et PAGE-DOWN pour parcourir les \u00e9l\u00e9ments.");
 		InputMap input = translatedTextArea.getInputMap();
-		KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
+		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 		KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
 		input.put(shiftEnter, "insert-break");
 		input.put(enter, "text-submit");
@@ -557,6 +583,7 @@ public class TranslationAppMain extends JFrame {
 		int currentSelected = table.getSelectedRow();
 		clearTranslationItem((String) table.getModel().getValueAt(
 				currentSelected, 2));
+		updateTranslationProgress();
 	}
 
 	private void clearTranslationItem(String id) {
