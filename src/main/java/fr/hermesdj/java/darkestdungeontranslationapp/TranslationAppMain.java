@@ -175,7 +175,7 @@ public class TranslationAppMain extends JFrame {
 		ActionListener clearTranslation = new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				translatedTextArea.setText("");
+				deleteTranslation();
 			}
 		};
 
@@ -437,22 +437,35 @@ public class TranslationAppMain extends JFrame {
 
 		JButton previousItem = new JButton(new ImageIcon(getClass()
 				.getResource("/images/arrow_up.png")));
+		previousItem
+				.setToolTipText("Aller \u00e0 la l'entr\u00e9e pr\u00e9c\u00e9dente.");
 		previousItem.addActionListener(selectPreviousEntry);
 		translationToolBar.add(previousItem);
 
 		JButton nextItem = new JButton(new ImageIcon(getClass().getResource(
 				"/images/arrow_down.png")));
+		nextItem.setToolTipText("Aller \u00e0 la prochaine entr\u00e9e.");
 		nextItem.addActionListener(selectNextEntry);
 		translationToolBar.add(nextItem);
 		translationToolBar.add(new JSeparator());
 
 		JButton acceptTranslation = new JButton(new ImageIcon(getClass()
 				.getResource("/images/accept.png")));
+		acceptTranslation.setToolTipText("Valider cette traduction.");
 		acceptTranslation.addActionListener(acceptTranslationAction);
 		translationToolBar.add(acceptTranslation);
 
+		JButton deleteTranslation = new JButton(new ImageIcon(getClass()
+				.getResource("/images/delete.png")));
+		deleteTranslation.addActionListener(clearTranslation);
+		deleteTranslation.setToolTipText("Supprimer cette traduction.");
+		translationToolBar.add(deleteTranslation);
+		translationToolBar.add(new JSeparator());
+
 		JButton copyToClipboard = new JButton(new ImageIcon(getClass()
 				.getResource("/images/page_copy.png")));
+		copyToClipboard
+				.setToolTipText("Copier l'original dans le presse papier.");
 		copyToClipboard.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -475,6 +488,8 @@ public class TranslationAppMain extends JFrame {
 
 		JButton getHintBtn = new JButton(new ImageIcon(getClass().getResource(
 				"/images/lightbulb.png")));
+		getHintBtn
+				.setToolTipText("Afficher une traduction provenant de Bing Translate");
 		getHintBtn.addActionListener(showHintAction);
 		translationToolBar.add(getHintBtn);
 		translationToolBar.setFloatable(false);
@@ -535,6 +550,29 @@ public class TranslationAppMain extends JFrame {
 		progressBar.setStringPainted(true);
 		progressBar.setAlignmentX(JProgressBar.RIGHT_ALIGNMENT);
 		statusBar.add(progressBar);
+	}
+
+	protected void deleteTranslation() {
+		translatedTextArea.setText("");
+		int currentSelected = table.getSelectedRow();
+		clearTranslationItem((String) table.getModel().getValueAt(
+				currentSelected, 2));
+	}
+
+	private void clearTranslationItem(String id) {
+		table.getModel().setValueAt("", table.getSelectedRow(), 1);
+
+		System.out.println("Clearing the following translation id: " + id);
+
+		// Save in dom document
+		XPathExpression<Element> expression = xFactory.compile(
+				"//language[@id='" + translation_language + "']/entry[@id='"
+						+ id + "']", Filters.element());
+
+		Element el = expression.evaluateFirst(currentDocument);
+		el.setText("");
+
+		updateTranslationProgress();
 	}
 
 	protected void acceptTranslation() {

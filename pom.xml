@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.hermesdj.java</groupId>
-	<artifactId>darkestdungeontranslationapp</artifactId>
+	<artifactId>DarkestDungeonTranslationHelper</artifactId>
 	<version>0.0.2</version>
-	<name>Darkest Dungeon Translation App</name>
+	<name>Darkest Dungeon Translation Helper</name>
 	<description>App used to translate Darkest Dungeon</description>
 
 	<dependencies>
@@ -36,6 +36,7 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
 							<mainClass>fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain</mainClass>
