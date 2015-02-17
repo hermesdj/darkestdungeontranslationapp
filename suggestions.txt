@@ -1,5 +1,3 @@
-- s'inspirer de poedit pour l'ihm
-- ajouter l'id
 - Champ de recherche original/translation
-- Ajout d'une checkbox pour "vÃ©rifier"
-- Aide sur les boutons
+- Labels sur champs dans zone de traduction
+- Boutons trad bing et autre séparés avec les 4 boutons déplacement/validation en bas à droite à l'horizontal

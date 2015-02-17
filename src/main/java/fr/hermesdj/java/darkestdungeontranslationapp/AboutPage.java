@@ -61,7 +61,7 @@ public class AboutPage extends JFrame {
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 
-		JLabel lblOutilDaide = new JLabel("Outil d'aide Ã  la traduction");
+		JLabel lblOutilDaide = new JLabel("Outil d'aide \u00e0  la traduction");
 		lblOutilDaide.setForeground(Color.GRAY);
 		lblOutilDaide.setBounds(10, 36, 170, 14);
 		panel.add(lblOutilDaide);

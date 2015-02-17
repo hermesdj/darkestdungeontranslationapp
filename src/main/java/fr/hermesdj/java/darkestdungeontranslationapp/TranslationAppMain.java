@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import javax.jws.Oneway;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -71,6 +72,10 @@ import com.memetix.mst.translate.Translate;
 import fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppConfigurationManager.ConfigurationKey;
 
 public class TranslationAppMain extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8925633482064125521L;
 	private JTextArea originalTextArea = new JTextArea();
 	private JTextArea translatedTextArea = new JTextArea();
 	private JFileChooser chooser = new JFileChooser();
@@ -93,12 +98,13 @@ public class TranslationAppMain extends JFrame {
 	private Document currentDocument;
 
 	private TranslationAppConfigurationManager conf;
-	private File configurationFile;
+	public static File configurationFile;
 	private String currentEditedFile;
 	private LoadFileTask loadFileTask;
 	private JTextArea hintArea;
 	private JTextField idField;
 	private AboutPage aboutPage;
+	private PropertiesPage propertiesPage;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -117,7 +123,7 @@ public class TranslationAppMain extends JFrame {
 		initialize();
 	}
 
-	private void initializeProperties() {
+	public void initializeProperties() {
 		conf = TranslationAppConfigurationManager.getInstance();
 		configurationFile = new File("translationapp.conf");
 		conf.loadFromFile(configurationFile);
@@ -157,6 +163,7 @@ public class TranslationAppMain extends JFrame {
 		this.setResizable(false);
 
 		aboutPage = new AboutPage();
+		propertiesPage = new PropertiesPage(this);
 
 		// Configure Shared Action Listeners
 		ActionListener save = new ActionListener() {
@@ -270,6 +277,16 @@ public class TranslationAppMain extends JFrame {
 		reloadItem.addActionListener(reloadFile);
 		reloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask()));
+		
+		JMenuItem settingsItem = new JMenuItem("Configurer...", new ImageIcon(
+				getClass().getResource("/images/wrench_orange.png")));
+		settingsItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				propertiesPage.setVisible(true);
+			}
+		});
 
 		JMenuItem exit = new JMenuItem("Quitter");
 		exit.addActionListener(new ActionListener() {
@@ -282,6 +299,8 @@ public class TranslationAppMain extends JFrame {
 		fileMenu.add(openFile);
 		fileMenu.add(saveItem);
 		fileMenu.add(reloadItem);
+		fileMenu.add(new JSeparator());
+		fileMenu.add(settingsItem);
 		fileMenu.add(new JSeparator());
 		fileMenu.add(exit);
 		menuBar.add(fileMenu);
@@ -372,6 +391,30 @@ public class TranslationAppMain extends JFrame {
 		toolbar.add(saveFile);
 		this.add(toolbar, BorderLayout.NORTH);
 		toolbar.setFloatable(false);
+		
+		JButton copyToClipboard = new JButton(new ImageIcon(getClass()
+				.getResource("/images/page_copy.png")));
+		copyToClipboard
+				.setToolTipText("Copier l'original dans le presse papier.");
+		copyToClipboard.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				Clipboard clip = Toolkit.getDefaultToolkit()
+						.getSystemClipboard();
+				StringSelection stringSelection = null;
+				if (originalTextArea.getSelectedText() != null) {
+					stringSelection = new StringSelection(originalTextArea
+							.getSelectedText());
+				} else {
+					stringSelection = new StringSelection(originalTextArea
+							.getText());
+				}
+
+				clip.setContents(stringSelection, null);
+			}
+		});
+
+		toolbar.add(copyToClipboard);
 
 		JButton reloadFileTool = new JButton(new ImageIcon(getClass()
 				.getResource("/images/arrow_refresh.png")));
@@ -482,30 +525,6 @@ public class TranslationAppMain extends JFrame {
 		translationToolBar.add(deleteTranslation);
 		translationToolBar.add(new JSeparator());
 
-		JButton copyToClipboard = new JButton(new ImageIcon(getClass()
-				.getResource("/images/page_copy.png")));
-		copyToClipboard
-				.setToolTipText("Copier l'original dans le presse papier.");
-		copyToClipboard.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				Clipboard clip = Toolkit.getDefaultToolkit()
-						.getSystemClipboard();
-				StringSelection stringSelection = null;
-				if (originalTextArea.getSelectedText() != null) {
-					stringSelection = new StringSelection(originalTextArea
-							.getSelectedText());
-				} else {
-					stringSelection = new StringSelection(originalTextArea
-							.getText());
-				}
-
-				clip.setContents(stringSelection, null);
-			}
-		});
-
-		translationToolBar.add(copyToClipboard);
-
 		JButton getHintBtn = new JButton(new ImageIcon(getClass().getResource(
 				"/images/lightbulb.png")));
 		getHintBtn
@@ -581,12 +600,15 @@ public class TranslationAppMain extends JFrame {
 	protected void deleteTranslation() {
 		translatedTextArea.setText("");
 		int currentSelected = table.getSelectedRow();
-		clearTranslationItem((String) table.getModel().getValueAt(
-				currentSelected, 2));
+		String id = (String) table.getModel().getValueAt(
+				currentSelected, 2);
+		int subid = Integer.valueOf((String) table.getModel().getValueAt(
+				currentSelected, 3));
+		clearTranslationItem(id, subid);
 		updateTranslationProgress();
 	}
 
-	private void clearTranslationItem(String id) {
+	private void clearTranslationItem(String id, int subid) {
 		table.getModel().setValueAt("", table.getSelectedRow(), 1);
 
 		System.out.println("Clearing the following translation id: " + id);
@@ -596,16 +618,20 @@ public class TranslationAppMain extends JFrame {
 				"//language[@id='" + translation_language + "']/entry[@id='"
 						+ id + "']", Filters.element());
 
-		Element el = expression.evaluateFirst(currentDocument);
-		el.setText("");
+		List<Element> el = expression.evaluate(currentDocument);
+		el.get(subid).setText("");
 
 		updateTranslationProgress();
 	}
 
 	protected void acceptTranslation() {
 		int currentSelected = table.getSelectedRow();
-		saveTranslationItem(translatedTextArea.getText(), (String) table
-				.getModel().getValueAt(currentSelected, 2));
+		String id = (String) table.getModel().getValueAt(
+				currentSelected, 2);
+		int subid = Integer.valueOf((String) table.getModel().getValueAt(
+				currentSelected, 3));
+		
+		saveTranslationItem(translatedTextArea.getText(), id, subid);
 
 		if (currentSelected + 1 >= table.getRowCount()) {
 			scrollToRow(0);
@@ -614,7 +640,7 @@ public class TranslationAppMain extends JFrame {
 		}
 	}
 
-	protected void saveTranslationItem(String text, String id) {
+	protected void saveTranslationItem(String text, String id, int subid) {
 		table.getModel().setValueAt(translatedTextArea.getText(),
 				table.getSelectedRow(), 1);
 
@@ -622,7 +648,7 @@ public class TranslationAppMain extends JFrame {
 			return;
 		}
 
-		System.out.println("Saving the following translation into id " + id);
+		System.out.println("Saving the following translation into id " + id + " and subid " + subid);
 		System.out.println(text);
 
 		// Save in dom document
@@ -630,8 +656,8 @@ public class TranslationAppMain extends JFrame {
 				"//language[@id='" + translation_language + "']/entry[@id='"
 						+ id + "']", Filters.element());
 
-		Element el = expression.evaluateFirst(currentDocument);
-		el.setText(text);
+		List<Element> el = expression.evaluate(currentDocument);
+		el.get(subid).setText(text);
 
 		updateTranslationProgress();
 	}
@@ -649,8 +675,10 @@ public class TranslationAppMain extends JFrame {
 		columnsNames.add("Text Original : " + original_language);
 		columnsNames.add("Texte Traduit : " + translation_language);
 		columnsNames.add("Id");
+		columnsNames.add("SubId");
 
 		dtm.setDataVector(tableData, columnsNames);
+		table.removeColumn(table.getColumnModel().getColumn(3));
 
 		// Configure some of JTable's paramters
 		table.setShowHorizontalLines(false);
@@ -664,7 +692,7 @@ public class TranslationAppMain extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.getColumnModel().getColumn(0).setMinWidth(150);
 		table.getColumnModel().getColumn(1).setMinWidth(150);
-		table.getColumnModel().getColumn(2).setMaxWidth(150);
+		table.getColumnModel().getColumn(2).setMinWidth(50);
 
 		table.scrollRectToVisible(new Rectangle(table.getCellRect(0, 0, true)));
 
@@ -727,6 +755,8 @@ public class TranslationAppMain extends JFrame {
 			try {
 				currentDocument = (Document) builder.build(file);
 				Element root = currentDocument.getRootElement();
+				
+				System.out.println("Parsing source language " + original_language);
 
 				XPathExpression<Element> browseOriginal = xFactory.compile(
 						"//language[@id='" + original_language
@@ -741,32 +771,43 @@ public class TranslationAppMain extends JFrame {
 						+ " elements...");
 
 				tableData = new Vector<Vector<String>>();
-				System.out.println(blankOnly);
-				for (int i = 0; i < originalElements.size(); i++) {
-					Element el = originalElements.get(i);
+				int i = 0;
+				int subid = 0;
+				String lastid = "";
+				for (Element el : originalElements) {
 					String id = el.getAttributeValue("id");
-					String targetContent = xFactory
+					
+					List<Element> elems = xFactory
 							.compile(
 									"//language[@id='" + translation_language
 											+ "']/entry[@id='" + id + "']",
-									Filters.element()).evaluateFirst(root)
-							.getText();
-
-					if (!targetContent.isEmpty() && blankOnly) {
-						System.out.println("breaking on " + targetContent);
+									Filters.element()).evaluate(root);
+					
+					if(id.equals(lastid)){
+						subid++;
+					}else{
+						subid = 0;
+					}
+					
+					if(!elems.get(subid).getText().isEmpty() && blankOnly){
 						continue;
 					}
-
+					
 					Vector<String> vector = new Vector<String>();
 					vector.add(el.getText());
-					vector.add(targetContent);
+					vector.add(elems.get(subid).getText());
 					vector.add(id);
+					vector.add(String.valueOf(subid));
+					
 					tableData.add(vector);
+					
 					Double progress = Math
 							.ceil(((double) i / (double) originalElements
 									.size()) * 100);
 
 					setProgress(progress.intValue());
+					i++;	
+					lastid = id;
 				}
 			} catch (JDOMException e) {
 				e.printStackTrace();
