@@ -172,7 +172,7 @@ public class PropertiesPage extends JFrame {
 
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			conf.setProperty(ConfigurationKey.TRANSLATION_FILES_LOCATION,
-					chooser.getSelectedFile().getAbsolutePath());
+					(String) chooser.getSelectedFile().getAbsolutePath());
 			defaultFolderTxt.setText(chooser.getSelectedFile()
 					.getAbsolutePath());
 			conf.save();
@@ -191,7 +191,7 @@ public class PropertiesPage extends JFrame {
 		conf.setProperty(ConfigurationKey.AZURE_CLIENT_SECRET,
 				clientSecretTxt.getText());
 		conf.setProperty(ConfigurationKey.TRANSLATION_FILES_LOCATION,
-				defaultFolderTxt.getText());
+				(String) defaultFolderTxt.getText());
 		conf.setProperty(ConfigurationKey.TRANSLATED_LANGUAGE,
 				(String) targetLanguage.getSelectedItem());
 		conf.setProperty(ConfigurationKey.DEFAULT_ORIGINAL_LANGUAGE,

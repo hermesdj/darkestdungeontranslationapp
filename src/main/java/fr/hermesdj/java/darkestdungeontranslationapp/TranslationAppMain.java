@@ -123,6 +123,7 @@ public class TranslationAppMain extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					System.out.println("Lancement de l'application...");
 					TranslationAppMain window = new TranslationAppMain();
 					window.setVisible(true);
 				} catch (Exception e) {
@@ -984,7 +985,7 @@ public class TranslationAppMain extends JFrame {
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			sourceDirectory = chooser.getSelectedFile();
 			conf.setProperty(ConfigurationKey.TRANSLATION_FILES_LOCATION,
-					sourceDirectory.getAbsolutePath());
+					(String) sourceDirectory.getPath());
 			conf.save();
 			System.out.println("Picked directory is : " + sourceDirectory);
 		} else {
