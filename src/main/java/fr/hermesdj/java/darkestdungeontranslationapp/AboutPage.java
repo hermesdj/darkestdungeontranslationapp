@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -18,6 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppConfigurationManager.ConfigurationKey;
 
 public class AboutPage extends JFrame {
 
@@ -44,6 +48,10 @@ public class AboutPage extends JFrame {
 	 */
 	public AboutPage() {
 		setTitle("A propos de l'application...");
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2
+				- this.getSize().height / 2 - 150);
+
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setResizable(false);
 		setBounds(100, 100, 450, 300);
@@ -72,7 +80,9 @@ public class AboutPage extends JFrame {
 		lblDarkestDungeon.setBounds(10, 11, 222, 23);
 		panel.add(lblDarkestDungeon);
 
-		JLabel lblVersion = new JLabel("Version 0.0.2");
+		JLabel lblVersion = new JLabel("Version "
+				+ TranslationAppConfigurationManager.getInstance().getProperty(
+						ConfigurationKey.APPLICATION_VERSION));
 		lblVersion.setForeground(Color.GRAY);
 		lblVersion.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblVersion.setHorizontalAlignment(SwingConstants.LEFT);

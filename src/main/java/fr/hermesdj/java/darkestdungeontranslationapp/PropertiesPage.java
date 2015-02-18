@@ -1,6 +1,8 @@
 package fr.hermesdj.java.darkestdungeontranslationapp;
 
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -48,6 +50,11 @@ public class PropertiesPage extends JFrame {
 				.getInstance();
 
 		setTitle("Configuration");
+
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
+				/ 2 - this.getSize().height / 2 - 150);
+
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setResizable(false);
 		setBounds(100, 100, 599, 356);

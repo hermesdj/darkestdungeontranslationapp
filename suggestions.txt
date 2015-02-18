@@ -1,3 +1,1 @@
-- Champ de recherche original/translation
 - Labels sur champs dans zone de traduction
-- Boutons trad bing et autre séparés avec les 4 boutons déplacement/validation en bas à droite à l'horizontal

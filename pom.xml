@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.hermesdj.java</groupId>
 	<artifactId>DarkestDungeonTranslationHelper</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>Darkest Dungeon Translation Helper</name>
 	<description>App used to translate Darkest Dungeon</description>
 
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
-			<version>1.9</version>
+			<version>1.10</version>
 		</dependency>
 		<dependency>
 			<groupId>com.memetix</groupId>
@@ -32,6 +32,12 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
