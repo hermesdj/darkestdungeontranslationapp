@@ -4,9 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Event;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -24,12 +26,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
-import javax.jws.Oneway;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -50,11 +52,18 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.RowFilter;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -98,13 +107,17 @@ public class TranslationAppMain extends JFrame {
 	private Document currentDocument;
 
 	private TranslationAppConfigurationManager conf;
-	public static File configurationFile;
 	private String currentEditedFile;
 	private LoadFileTask loadFileTask;
 	private JTextArea hintArea;
 	private JTextField idField;
 	private AboutPage aboutPage;
 	private PropertiesPage propertiesPage;
+	private GridBagConstraints c_1;
+	private GridBagConstraints c_2;
+	private GridBagConstraints c_3;
+	private GridBagConstraints c_4;
+	private GridBagConstraints c_5;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -125,8 +138,7 @@ public class TranslationAppMain extends JFrame {
 
 	public void initializeProperties() {
 		conf = TranslationAppConfigurationManager.getInstance();
-		configurationFile = new File("translationapp.conf");
-		conf.loadFromFile(configurationFile);
+		conf.load();
 
 		sourceDirectory = new File(
 				conf.getProperty(ConfigurationKey.TRANSLATION_FILES_LOCATION));
@@ -136,8 +148,8 @@ public class TranslationAppMain extends JFrame {
 		translation_language = conf
 				.getProperty(ConfigurationKey.TRANSLATED_LANGUAGE);
 
-		Boolean blankOnly = Boolean.valueOf(conf
-				.getProperty(ConfigurationKey.DEFAULT_BLANK_ONLY));
+		Boolean blankOnly = conf.getBoolean(
+				ConfigurationKey.DEFAULT_BLANK_ONLY, false);
 		blankTranslateCheckbox.setSelected(blankOnly);
 
 		Translate.setClientId(conf
@@ -160,7 +172,7 @@ public class TranslationAppMain extends JFrame {
 		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
 				/ 2 - this.getSize().height / 2 - 150);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(false);
+		this.setResizable(true);
 
 		aboutPage = new AboutPage();
 		propertiesPage = new PropertiesPage(this);
@@ -225,9 +237,9 @@ public class TranslationAppMain extends JFrame {
 				acceptTranslation();
 			}
 		};
-		
+
 		Action acceptTranslationHintAction = new AbstractAction() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				translatedTextArea.setText(hintArea.getText());
@@ -239,11 +251,10 @@ public class TranslationAppMain extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					hintArea.setBackground(new Color(224, 224, 224));
-					hintArea.setText(Translate.execute(
-							originalTextArea.getText(),
-							Language.valueOf(original_language
-									.toUpperCase()),
-									Language.valueOf(translation_language.toUpperCase())));
+					hintArea.setText(Translate.execute(originalTextArea
+							.getText(), Language.valueOf(original_language
+							.toUpperCase()), Language
+							.valueOf(translation_language.toUpperCase())));
 					hintArea.setBackground(new Color(229, 255, 204));
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -254,7 +265,7 @@ public class TranslationAppMain extends JFrame {
 		};
 
 		// Configure Menu
-		
+
 		// FICHIER
 		JMenu fileMenu = new JMenu("Fichier");
 		JMenuItem openFile = new JMenuItem("Dossier...", new ImageIcon(
@@ -277,11 +288,11 @@ public class TranslationAppMain extends JFrame {
 		reloadItem.addActionListener(reloadFile);
 		reloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask()));
-		
+
 		JMenuItem settingsItem = new JMenuItem("Configurer...", new ImageIcon(
 				getClass().getResource("/images/wrench_orange.png")));
 		settingsItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				propertiesPage.setVisible(true);
@@ -318,8 +329,9 @@ public class TranslationAppMain extends JFrame {
 				KeyEvent.VK_ENTER, 0));
 		modifier.add(acceptTranslationItem);
 
-		JMenuItem clearTranslationItem = new JMenuItem("Supprimer la Traduction",
-				new ImageIcon(getClass().getResource("/images/delete.png")));
+		JMenuItem clearTranslationItem = new JMenuItem(
+				"Supprimer la Traduction", new ImageIcon(getClass()
+						.getResource("/images/delete.png")));
 		clearTranslationItem.setPreferredSize(new Dimension(250, 20));
 		clearTranslationItem.addActionListener(clearTranslation);
 		clearTranslationItem.setAccelerator(KeyStroke.getKeyStroke(
@@ -334,15 +346,16 @@ public class TranslationAppMain extends JFrame {
 		translationHintMenu.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_ENTER, KeyEvent.ALT_MASK));
 		modifier.add(translationHintMenu);
-		
+
 		JMenuItem acceptTranslationHintMenu = new JMenuItem(
-				"Accepter Suggestion", new ImageIcon(getClass()
-						.getResource("/images/lightbulb_add.png")));
+				"Accepter Suggestion", new ImageIcon(getClass().getResource(
+						"/images/lightbulb_add.png")));
 		acceptTranslationHintMenu.setPreferredSize(new Dimension(250, 20));
-		acceptTranslationHintMenu.addActionListener(acceptTranslationHintAction);
+		acceptTranslationHintMenu
+				.addActionListener(acceptTranslationHintAction);
 		acceptTranslationHintMenu.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_ENTER, Toolkit.getDefaultToolkit()
-				.getMenuShortcutKeyMask()));
+						.getMenuShortcutKeyMask()));
 		modifier.add(acceptTranslationHintMenu);
 		modifier.add(new JSeparator());
 
@@ -373,7 +386,7 @@ public class TranslationAppMain extends JFrame {
 
 		this.setJMenuBar(menuBar);
 
-		this.add(new JSeparator(JSeparator.HORIZONTAL));
+		getContentPane().add(new JSeparator(JSeparator.HORIZONTAL));
 
 		// Configure Toolbar
 		JToolBar toolbar = new JToolBar("Outils");
@@ -389,9 +402,9 @@ public class TranslationAppMain extends JFrame {
 		saveFile.setToolTipText("Sauvegarder la traduction dans le fichier s\u00e9lectionn\u00e9");
 		saveFile.addActionListener(save);
 		toolbar.add(saveFile);
-		this.add(toolbar, BorderLayout.NORTH);
+		getContentPane().add(toolbar, BorderLayout.NORTH);
 		toolbar.setFloatable(false);
-		
+
 		JButton copyToClipboard = new JButton(new ImageIcon(getClass()
 				.getResource("/images/page_copy.png")));
 		copyToClipboard
@@ -430,7 +443,7 @@ public class TranslationAppMain extends JFrame {
 				JCheckBox box = (JCheckBox) e.getSource();
 				conf.setProperty(ConfigurationKey.DEFAULT_BLANK_ONLY,
 						String.valueOf(box.isSelected()));
-				conf.saveToFile(configurationFile);
+				conf.save();
 				changeFile(currentEditedFile, box.isSelected());
 			}
 		});
@@ -439,8 +452,9 @@ public class TranslationAppMain extends JFrame {
 
 		toolbar.add(blankTranslateCheckbox);
 
-		JComboBox<String> fileSelector = new JComboBox<String>(
-				getFileList(sourceDirectory));
+		JComboBox<String> fileSelector = new JComboBox<String>();
+		fileSelector.setModel(new DefaultComboBoxModel<String>(
+				getFileList(sourceDirectory)));
 		fileSelector.setSelectedIndex(0);
 		fileSelector.addActionListener(new ActionListener() {
 
@@ -451,15 +465,30 @@ public class TranslationAppMain extends JFrame {
 			}
 
 		});
+
+		JSeparator separator = new JSeparator();
+		separator.setOrientation(SwingConstants.VERTICAL);
+		toolbar.add(separator);
 		fileSelector.setToolTipText("Choisir le fichier \u00e0 traduire.");
 		toolbar.add(fileSelector);
+		toolbar.add(new JSeparator(JSeparator.VERTICAL));
+
+		// Search area
+		JButton searchButton = new JButton(new ImageIcon(getClass()
+				.getResource("/images/magnifier.png")));
+
+		final JTextField searchField = new JTextField();
+		searchField.setToolTipText("Filtrer le tableau");
+		toolbar.add(searchField);
+		toolbar.add(searchButton);
 
 		// Main Panel
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		panel.setBorder(new EmptyBorder(1, 1, 1, 1));
-		this.add(panel, BorderLayout.CENTER);
+		getContentPane().add(panel, BorderLayout.CENTER);
 
+		// Tableau
 		table = new JTable(new DefaultTableModel()) {
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
@@ -476,23 +505,42 @@ public class TranslationAppMain extends JFrame {
 			}
 		};
 
+		// Filtrage
+		final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(
+				table.getModel());
+		table.setRowSorter(sorter);
+		Action searchAction = new AbstractAction() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String text = searchField.getText();
+				if (text.length() == 0) {
+					sorter.setRowFilter(null);
+				} else {
+					sorter.setRowFilter(RowFilter.regexFilter(text));
+				}
+			}
+		};
+		searchButton.addActionListener(searchAction);
+		InputMap searchInput = searchField.getInputMap();
+		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+		searchInput.put(enter, "text-submit");
+		ActionMap searchActions = searchField.getActionMap();
+		searchActions.put("text-submit", searchAction);
+
 		// Add the table to a scrolling pane
 		scrollPane = new JScrollPane(table);
+		scrollPane.setViewportBorder(new SoftBevelBorder(BevelBorder.LOWERED,
+				null, null, null, null));
+		scrollPane
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		panel.add(scrollPane);
 
-		JPanel translationArea = new JPanel();
-		translationArea.setPreferredSize(new Dimension(800, 300));
-		panel.add(translationArea, BorderLayout.CENTER);
-
-		JPanel translationPanel = new JPanel();
-		translationPanel.setPreferredSize(new Dimension(545, 200));
-		translationPanel.setLayout(new GridLayout(2, 1));
-
-		idField = new JTextField();
-		idField.setBackground(new Color(224, 224, 224));
-		idField.setPreferredSize(new Dimension(790, 20));
-		translationArea.add(idField, BorderLayout.NORTH);
-		translationArea.add(translationPanel, BorderLayout.CENTER);
+		GridBagLayout gbl_translationArea = new GridBagLayout();
+		JPanel translationArea = new JPanel(gbl_translationArea);
+		translationArea.setBorder(new SoftBevelBorder(BevelBorder.LOWERED,
+				null, null, null, null));
+		panel.add(translationArea);
 
 		// Translation Toolbar
 		JToolBar translationToolBar = new JToolBar("Translation Tools",
@@ -512,19 +560,6 @@ public class TranslationAppMain extends JFrame {
 		translationToolBar.add(nextItem);
 		translationToolBar.add(new JSeparator());
 
-		JButton acceptTranslation = new JButton(new ImageIcon(getClass()
-				.getResource("/images/accept.png")));
-		acceptTranslation.setToolTipText("Valider cette traduction.");
-		acceptTranslation.addActionListener(acceptTranslationAction);
-		translationToolBar.add(acceptTranslation);
-
-		JButton deleteTranslation = new JButton(new ImageIcon(getClass()
-				.getResource("/images/delete.png")));
-		deleteTranslation.addActionListener(clearTranslation);
-		deleteTranslation.setToolTipText("Supprimer cette traduction.");
-		translationToolBar.add(deleteTranslation);
-		translationToolBar.add(new JSeparator());
-
 		JButton getHintBtn = new JButton(new ImageIcon(getClass().getResource(
 				"/images/lightbulb.png")));
 		getHintBtn
@@ -532,7 +567,7 @@ public class TranslationAppMain extends JFrame {
 		getHintBtn.addActionListener(showHintAction);
 		translationToolBar.add(getHintBtn);
 		translationToolBar.setFloatable(false);
-		
+
 		JButton copyHintBtn = new JButton(new ImageIcon(getClass().getResource(
 				"/images/lightbulb_add.png")));
 		copyHintBtn
@@ -540,20 +575,48 @@ public class TranslationAppMain extends JFrame {
 		copyHintBtn.addActionListener(acceptTranslationHintAction);
 		translationToolBar.add(copyHintBtn);
 
-		translationArea.add(translationToolBar, BorderLayout.LINE_START);
-		hintArea = new JTextArea();
-		hintArea.setBackground(new Color(224, 224, 224));
-		hintArea.setPreferredSize(new Dimension(200, 200));
-		hintArea.setLineWrap(true);
-		hintArea.setDisabledTextColor(Color.BLACK);
+		c_2 = new GridBagConstraints();
+		c_2.anchor = GridBagConstraints.NORTHWEST;
+		c_2.gridheight = 4;
+		c_2.insets = new Insets(5, 0, 5, 0);
+		c_2.gridx = 7;
+		c_2.gridy = 0;
+		translationArea.add(translationToolBar, c_2);
 
-		translationArea.add(hintArea, BorderLayout.EAST);
+		idField = new JTextField();
+		idField.setBackground(new Color(224, 224, 224));
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.SOUTH;
+		c.insets = new Insets(5, 5, 5, 5);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 4;
+		c.fill = GridBagConstraints.BOTH;
+		translationArea.add(idField, c);
+
+		JPanel translationPanel = new JPanel();
+		translationPanel.setLayout(new GridLayout(2, 1, 0, 5));
+
+		c_1 = new GridBagConstraints();
+		c_1.weightx = 15.0;
+		c_1.weighty = 1.0;
+		c_1.insets = new Insets(0, 5, 5, 5);
+		c_1.fill = GridBagConstraints.BOTH;
+		c_1.ipady = 50;
+		c_1.gridheight = 7;
+		c_1.gridwidth = 4;
+		c_1.gridx = 0;
+		c_1.gridy = 1;
+
+		translationArea.add(translationPanel, c_1);
+		originalTextArea.setWrapStyleWord(true);
+		originalTextArea.setLineWrap(true);
 
 		originalTextArea.setBackground(new Color(224, 224, 224));
 		originalTextArea.setDisabledTextColor(Color.BLACK);
 		originalTextArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		originalTextArea.setLineWrap(true);
 		originalTextArea.setEnabled(false);
+		translatedTextArea.setWrapStyleWord(true);
 
 		translatedTextArea.setBackground(new Color(229, 255, 204));
 		translatedTextArea.setLineWrap(true);
@@ -563,7 +626,6 @@ public class TranslationAppMain extends JFrame {
 		translatedTextArea
 				.setToolTipText("SHIFT+ENTER pour revenir \u00e0 la ligne.\n ENTER pour valider la traduction et passer automatiquement \u00e0 la suivante.\n PAGE-UP et PAGE-DOWN pour parcourir les \u00e9l\u00e9ments.");
 		InputMap input = translatedTextArea.getInputMap();
-		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 		KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
 		input.put(shiftEnter, "insert-break");
 		input.put(enter, "text-submit");
@@ -586,10 +648,50 @@ public class TranslationAppMain extends JFrame {
 		translationPanel.add(originalTextArea);
 		translationPanel.add(translatedTextArea);
 
+		hintArea = new JTextArea();
+		hintArea.setBackground(new Color(224, 224, 224));
+		hintArea.setLineWrap(true);
+		hintArea.setDisabledTextColor(Color.BLACK);
+
+		c_5 = new GridBagConstraints();
+		c_5.weighty = 0.5;
+		c_5.fill = GridBagConstraints.BOTH;
+		c_5.gridwidth = 3;
+		c_5.gridheight = 6;
+		c_5.insets = new Insets(5, 5, 20, 5);
+		c_5.gridx = 4;
+		c_5.gridy = 0;
+		translationArea.add(hintArea, c_5);
+
+		JButton acceptTranslation = new JButton("Valider", new ImageIcon(
+				getClass().getResource("/images/accept.png")));
+		acceptTranslation.setToolTipText("Valider cette traduction.");
+		acceptTranslation.addActionListener(acceptTranslationAction);
+		c_3 = new GridBagConstraints();
+		c_3.gridwidth = 2;
+		c_3.weightx = 0.5;
+		c_3.fill = GridBagConstraints.BOTH;
+		c_3.insets = new Insets(0, 5, 5, 0);
+		c_3.gridx = 4;
+		c_3.gridy = 7;
+		translationArea.add(acceptTranslation, c_3);
+
+		JButton deleteTranslation = new JButton("Supprimer", new ImageIcon(
+				getClass().getResource("/images/delete.png")));
+		deleteTranslation.addActionListener(clearTranslation);
+		deleteTranslation.setToolTipText("Supprimer cette traduction.");
+		c_4 = new GridBagConstraints();
+		c_4.weightx = 0.5;
+		c_4.fill = GridBagConstraints.BOTH;
+		c_4.insets = new Insets(0, 5, 5, 5);
+		c_4.gridx = 6;
+		c_4.gridy = 7;
+		translationArea.add(deleteTranslation, c_4);
+
 		// STATUS BAR
 		JPanel statusBar = new JPanel(new GridLayout(1, 2));
-		this.add(statusBar, BorderLayout.SOUTH);
-
+		getContentPane().add(statusBar, BorderLayout.SOUTH);
+		statusBar.setBorder(BorderFactory.createLoweredSoftBevelBorder());
 		statusBar.add(logLabel);
 
 		progressBar.setStringPainted(true);
@@ -600,8 +702,7 @@ public class TranslationAppMain extends JFrame {
 	protected void deleteTranslation() {
 		translatedTextArea.setText("");
 		int currentSelected = table.getSelectedRow();
-		String id = (String) table.getModel().getValueAt(
-				currentSelected, 2);
+		String id = (String) table.getModel().getValueAt(currentSelected, 2);
 		int subid = Integer.valueOf((String) table.getModel().getValueAt(
 				currentSelected, 3));
 		clearTranslationItem(id, subid);
@@ -626,11 +727,10 @@ public class TranslationAppMain extends JFrame {
 
 	protected void acceptTranslation() {
 		int currentSelected = table.getSelectedRow();
-		String id = (String) table.getModel().getValueAt(
-				currentSelected, 2);
+		String id = (String) table.getModel().getValueAt(currentSelected, 2);
 		int subid = Integer.valueOf((String) table.getModel().getValueAt(
 				currentSelected, 3));
-		
+
 		saveTranslationItem(translatedTextArea.getText(), id, subid);
 
 		if (currentSelected + 1 >= table.getRowCount()) {
@@ -648,7 +748,8 @@ public class TranslationAppMain extends JFrame {
 			return;
 		}
 
-		System.out.println("Saving the following translation into id " + id + " and subid " + subid);
+		System.out.println("Saving the following translation into id " + id
+				+ " and subid " + subid);
 		System.out.println(text);
 
 		// Save in dom document
@@ -755,8 +856,9 @@ public class TranslationAppMain extends JFrame {
 			try {
 				currentDocument = (Document) builder.build(file);
 				Element root = currentDocument.getRootElement();
-				
-				System.out.println("Parsing source language " + original_language);
+
+				System.out.println("Parsing source language "
+						+ original_language);
 
 				XPathExpression<Element> browseOriginal = xFactory.compile(
 						"//language[@id='" + original_language
@@ -776,37 +878,36 @@ public class TranslationAppMain extends JFrame {
 				String lastid = "";
 				for (Element el : originalElements) {
 					String id = el.getAttributeValue("id");
-					
-					List<Element> elems = xFactory
-							.compile(
-									"//language[@id='" + translation_language
-											+ "']/entry[@id='" + id + "']",
-									Filters.element()).evaluate(root);
-					
-					if(id.equals(lastid)){
+
+					List<Element> elems = xFactory.compile(
+							"//language[@id='" + translation_language
+									+ "']/entry[@id='" + id + "']",
+							Filters.element()).evaluate(root);
+
+					if (id.equals(lastid)) {
 						subid++;
-					}else{
+					} else {
 						subid = 0;
 					}
-					
-					if(!elems.get(subid).getText().isEmpty() && blankOnly){
+
+					if (!elems.get(subid).getText().isEmpty() && blankOnly) {
 						continue;
 					}
-					
+
 					Vector<String> vector = new Vector<String>();
 					vector.add(el.getText());
 					vector.add(elems.get(subid).getText());
 					vector.add(id);
 					vector.add(String.valueOf(subid));
-					
+
 					tableData.add(vector);
-					
+
 					Double progress = Math
 							.ceil(((double) i / (double) originalElements
 									.size()) * 100);
 
 					setProgress(progress.intValue());
-					i++;	
+					i++;
 					lastid = id;
 				}
 			} catch (JDOMException e) {
@@ -884,7 +985,7 @@ public class TranslationAppMain extends JFrame {
 			sourceDirectory = chooser.getSelectedFile();
 			conf.setProperty(ConfigurationKey.TRANSLATION_FILES_LOCATION,
 					sourceDirectory.getAbsolutePath());
-			conf.saveToFile(configurationFile);
+			conf.save();
 			System.out.println("Picked directory is : " + sourceDirectory);
 		} else {
 			System.out.println("No selection");

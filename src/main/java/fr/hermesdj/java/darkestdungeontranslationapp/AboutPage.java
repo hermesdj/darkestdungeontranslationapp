@@ -44,7 +44,8 @@ public class AboutPage extends JFrame {
 	 */
 	public AboutPage() {
 		setTitle("A propos de l'application...");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setResizable(false);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -61,14 +62,14 @@ public class AboutPage extends JFrame {
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 
-		JLabel lblOutilDaide = new JLabel("Outil d'aide \u00e0  la traduction");
+		JLabel lblOutilDaide = new JLabel("Outil d'aide \u00e0 la traduction");
 		lblOutilDaide.setForeground(Color.GRAY);
-		lblOutilDaide.setBounds(10, 36, 170, 14);
+		lblOutilDaide.setBounds(10, 45, 170, 14);
 		panel.add(lblOutilDaide);
 
 		JLabel lblDarkestDungeon = new JLabel("Darkest Dungeon");
 		lblDarkestDungeon.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblDarkestDungeon.setBounds(10, 11, 222, 14);
+		lblDarkestDungeon.setBounds(10, 11, 222, 23);
 		panel.add(lblDarkestDungeon);
 
 		JLabel lblVersion = new JLabel("Version 0.0.2");
@@ -129,7 +130,7 @@ public class AboutPage extends JFrame {
 				"<html>Cette application a \u00e9t\u00e9e cr\u00e9\u00e9e par la cha\u00eene Jay's Gaming. <br>Son utilisation est libre de droit.</html>");
 		projectDescr.setVerticalAlignment(SwingConstants.TOP);
 		projectDescr.setHorizontalAlignment(SwingConstants.LEFT);
-		projectDescr.setBounds(10, 57, 254, 159);
+		projectDescr.setBounds(10, 75, 254, 139);
 		panel.add(projectDescr);
 
 		JLabel lblDD = new JLabel();
