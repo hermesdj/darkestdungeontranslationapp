@@ -1,1 +1,4 @@
 - Labels sur champs dans zone de traduction
+
+- Traduction automatique à finir
+- Suppression automatique des cas où source == traduction pour nettoyer le fichier

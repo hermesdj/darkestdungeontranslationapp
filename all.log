@@ -1,11 +1,122 @@
-2015-02-19 17:48:19.049 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Launching main window...
-2015-02-19 17:48:19.332 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.Localization - Stored locale is fr_FR
-2015-02-19 17:48:19.336 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.Localization - Changed current locale to français
-2015-02-19 17:48:19.336 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.Localization - Using locale fr
-2015-02-19 17:48:19.340 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - File edited is : activity_log.string_table.xml
-2015-02-19 17:48:19.347 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Loading translation file D:\Users\jdallard\Documents\GitHub\DarkestDungeonFr\localization - FR\activity_log.string_table.xml
-2015-02-19 17:48:19.498 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing source language english
-2015-02-19 17:48:19.597 [SwingWorker-pool-4-thread-2] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Testing if Bing Translator is available
-2015-02-19 17:48:19.751 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - This file contains 299 elements to translate.
-2015-02-19 17:48:19.751 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing 299 elements...
-2015-02-19 17:48:20.338 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Done loading file content !
+2015-02-19 19:59:22.147 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Launching main window...
+2015-02-19 19:59:22.678 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.Localization - Stored locale is fr_FR
+2015-02-19 19:59:22.684 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.Localization - Changed current locale to français
+2015-02-19 19:59:22.684 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.Localization - Using locale fr
+2015-02-19 19:59:22.691 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - File edited is : activity_log.string_table.xml
+2015-02-19 19:59:22.696 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Loading translation file Z:\Users\Jeremy\Documents\Github\DarkestDungeonFr\localization - WORKSPACE\activity_log.string_table.xml
+2015-02-19 19:59:22.855 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing source language english
+2015-02-19 19:59:22.926 [SwingWorker-pool-4-thread-2] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Testing if Bing Translator is available
+2015-02-19 19:59:23.058 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - This file contains 299 elements to translate.
+2015-02-19 19:59:23.058 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing 299 elements...
+2015-02-19 19:59:24.020 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Done loading file content !
+2015-02-19 19:59:24.438 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Bing Translator is available.
+2015-02-19 19:59:32.246 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - File edited is : actor.string_table.xml
+2015-02-19 19:59:32.248 [SwingWorker-pool-4-thread-3] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Loading translation file Z:\Users\Jeremy\Documents\Github\DarkestDungeonFr\localization - WORKSPACE\actor.string_table.xml
+2015-02-19 19:59:32.275 [SwingWorker-pool-4-thread-3] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing source language english
+2015-02-19 19:59:32.278 [SwingWorker-pool-4-thread-3] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - This file contains 116 elements to translate.
+2015-02-19 19:59:32.278 [SwingWorker-pool-4-thread-3] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing 116 elements...
+2015-02-19 19:59:32.387 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Done loading file content !
+2015-02-19 19:59:39.480 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - File edited is : curios.string_table.xml
+2015-02-19 19:59:39.481 [SwingWorker-pool-4-thread-4] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Loading translation file Z:\Users\Jeremy\Documents\Github\DarkestDungeonFr\localization - WORKSPACE\curios.string_table.xml
+2015-02-19 19:59:39.515 [SwingWorker-pool-4-thread-4] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing source language english
+2015-02-19 19:59:39.519 [SwingWorker-pool-4-thread-4] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - This file contains 341 elements to translate.
+2015-02-19 19:59:39.520 [SwingWorker-pool-4-thread-4] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing 341 elements...
+2015-02-19 19:59:40.039 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Done loading file content !
+2015-02-19 19:59:52.818 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: curio_tooltip_investigate_fountain
+2015-02-19 19:59:53.768 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: curio_tooltip_investigate_aged_cask
+2015-02-19 19:59:54.143 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: curio_tooltip_investigate_oily_nitre
+2015-02-19 19:59:54.676 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: curio_tooltip_investigate_votive_table
+2015-02-19 19:59:55.381 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: curio_tooltip_investigate_musty_tome
+2015-02-19 19:59:55.769 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: curio_tooltip_investigate_arcane_lectern
+2015-02-19 19:59:56.198 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: curio_tooltip_investigate_troubling_portrait
+2015-02-19 19:59:56.627 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_old_one_statue
+2015-02-19 19:59:57.069 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_content_old_one_statue
+2015-02-19 19:59:57.487 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_nothing_old_one_statue
+2015-02-19 19:59:57.966 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_rotting_corpse
+2015-02-19 19:59:58.431 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_content_rotting_corpse
+2015-02-19 19:59:58.886 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_nothing_rotting_corpse
+2015-02-19 19:59:59.285 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_fountain
+2015-02-19 19:59:59.758 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_content_fountain
+2015-02-19 20:00:00.245 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_nothing_fountain
+2015-02-19 20:00:00.693 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_aged_cask
+2015-02-19 20:00:01.267 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_content_aged_cask
+2015-02-19 20:00:01.690 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_nothing_aged_cask
+2015-02-19 20:00:02.084 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_oily_nitre
+2015-02-19 20:00:02.503 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_content_oily_nitre
+2015-02-19 20:00:03.000 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_nothing_oily_nitre
+2015-02-19 20:00:03.536 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_votive_table
+2015-02-19 20:00:04.436 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_content_votive_table
+2015-02-19 20:00:05.016 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_nothing_votive_table
+2015-02-19 20:00:05.586 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_musty_tome
+2015-02-19 20:00:06.230 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_content_musty_tome
+2015-02-19 20:00:06.784 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_nothing_musty_tome
+2015-02-19 20:00:07.806 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_arcane_lectern
+2015-02-19 20:00:08.401 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_content_arcane_lectern
+2015-02-19 20:00:08.965 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_nothing_arcane_lectern
+2015-02-19 20:00:09.516 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_troubling_portrait
+2015-02-19 20:00:10.129 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_content_troubling_portrait
+2015-02-19 20:00:10.731 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_nothing_troubling_portrait
+2015-02-19 20:00:11.301 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_curio_title_nothing
+2015-02-19 20:00:21.640 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Saving the following translation into id str_curio_title_nothing and subid 0
+2015-02-19 20:00:21.640 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Error - no curio found!
+2015-02-19 20:00:22.998 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Saving file Z:\Users\Jeremy\Documents\Github\DarkestDungeonFr\localization - WORKSPACE\curios.string_table.xml
+2015-02-19 20:00:33.546 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - File edited is : curios.string_table.xml
+2015-02-19 20:00:33.550 [SwingWorker-pool-4-thread-5] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Loading translation file Z:\Users\Jeremy\Documents\Github\DarkestDungeonFr\localization - WORKSPACE\curios.string_table.xml
+2015-02-19 20:00:33.580 [SwingWorker-pool-4-thread-5] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing source language english
+2015-02-19 20:00:33.585 [SwingWorker-pool-4-thread-5] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - This file contains 341 elements to translate.
+2015-02-19 20:00:33.585 [SwingWorker-pool-4-thread-5] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing 341 elements...
+2015-02-19 20:00:34.070 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Done loading file content !
+2015-02-19 20:00:37.890 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - File edited is : dialogue.string_table.xml
+2015-02-19 20:00:37.891 [SwingWorker-pool-4-thread-6] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Loading translation file Z:\Users\Jeremy\Documents\Github\DarkestDungeonFr\localization - WORKSPACE\dialogue.string_table.xml
+2015-02-19 20:00:38.060 [SwingWorker-pool-4-thread-6] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing source language english
+2015-02-19 20:00:38.140 [SwingWorker-pool-4-thread-6] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - This file contains 4130 elements to translate.
+2015-02-19 20:00:38.140 [SwingWorker-pool-4-thread-6] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing 4130 elements...
+2015-02-19 20:02:07.117 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Done loading file content !
+2015-02-19 20:36:52.352 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: man_at_arms+str_afflicted_abusive
+2015-02-19 20:36:53.642 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: man_at_arms+str_afflicted_abusive
+2015-02-19 20:36:54.537 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: man_at_arms+str_afflicted_abusive
+2015-02-19 20:37:02.476 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: man_at_arms+str_afflicted_abusive
+2015-02-19 20:37:05.559 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: man_at_arms+str_afflicted_abusive
+2015-02-19 20:37:11.282 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: jester+str_afflicted_abusive
+2015-02-19 20:37:13.201 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: leper+str_afflicted_abusive
+2015-02-19 20:37:15.561 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: leper+str_afflicted_abusive
+2015-02-19 20:37:18.553 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: str_afflicted_selfishness
+2015-02-19 20:37:23.361 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: highwayman+str_afflicted_selfishness
+2015-02-19 20:37:25.623 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: highwayman+str_afflicted_selfishness
+2015-02-19 20:37:26.857 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: highwayman+str_afflicted_selfishness
+2015-02-19 20:37:28.125 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: highwayman+str_afflicted_selfishness
+2015-02-19 20:37:29.254 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: plague_doctor+str_afflicted_selfishness
+2015-02-19 20:37:30.979 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: plague_doctor+str_afflicted_selfishness
+2015-02-19 20:37:32.247 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: plague_doctor+str_afflicted_selfishness
+2015-02-19 20:37:33.478 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: plague_doctor+str_afflicted_selfishness
+2015-02-19 20:37:35.070 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: plague_doctor+str_afflicted_selfishness
+2015-02-19 20:37:36.381 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: vestal+str_afflicted_selfishness
+2015-02-19 20:37:37.573 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: vestal+str_afflicted_selfishness
+2015-02-19 20:37:38.653 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: vestal+str_afflicted_selfishness
+2015-02-19 20:37:39.791 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: vestal+str_afflicted_selfishness
+2015-02-19 20:37:41.063 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: vestal+str_afflicted_selfishness
+2015-02-19 20:37:42.219 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: occultist+str_afflicted_selfishness
+2015-02-19 20:37:43.123 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: occultist+str_afflicted_selfishness
+2015-02-19 20:37:44.115 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: occultist+str_afflicted_selfishness
+2015-02-19 20:37:45.355 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: occultist+str_afflicted_selfishness
+2015-02-19 20:37:46.326 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: occultist+str_afflicted_selfishness
+2015-02-19 20:37:47.198 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: grave_robber+str_afflicted_selfishness
+2015-02-19 20:37:48.065 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: grave_robber+str_afflicted_selfishness
+2015-02-19 20:37:49.010 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: grave_robber+str_afflicted_selfishness
+2015-02-19 20:37:49.934 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: grave_robber+str_afflicted_selfishness
+2015-02-19 20:37:50.832 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: grave_robber+str_afflicted_selfishness
+2015-02-19 20:37:54.078 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: bounty_hunter+str_afflicter_selfishness
+2015-02-19 20:37:55.344 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: bounty_hunter+str_afflicter_selfishness
+2015-02-19 20:37:56.614 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: bounty_hunter+str_afflicter_selfishness
+2015-02-19 20:37:57.534 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: bounty_hunter+str_afflicter_selfishness
+2015-02-19 20:37:58.524 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Clearing the following translation id: bounty_hunter+str_afflicter_selfishness
+2015-02-19 20:38:01.697 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Saving file Z:\Users\Jeremy\Documents\Github\DarkestDungeonFr\localization - WORKSPACE\dialogue.string_table.xml
+2015-02-19 20:38:04.341 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - File edited is : dialogue.string_table.xml
+2015-02-19 20:38:04.342 [SwingWorker-pool-4-thread-7] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Loading translation file Z:\Users\Jeremy\Documents\Github\DarkestDungeonFr\localization - WORKSPACE\dialogue.string_table.xml
+2015-02-19 20:38:04.443 [SwingWorker-pool-4-thread-7] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing source language english
+2015-02-19 20:38:04.516 [SwingWorker-pool-4-thread-7] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - This file contains 4130 elements to translate.
+2015-02-19 20:38:04.517 [SwingWorker-pool-4-thread-7] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing 4130 elements...
+2015-02-19 20:39:29.860 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Done loading file content !
+2015-02-19 21:00:51.842 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Saving the following translation into id highwayman+str_afflicted_fearful and subid 0
+2015-02-19 21:00:51.842 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Attrapé!  Piegé!
+2015-02-19 21:00:52.984 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Saving file Z:\Users\Jeremy\Documents\Github\DarkestDungeonFr\localization - WORKSPACE\dialogue.string_table.xml
