@@ -1,5 +1,6 @@
 package fr.hermesdj.java.darkestdungeontranslationapp;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -8,11 +9,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -21,9 +22,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import fr.hermesdj.java.darkestdungeontranslationapp.ConfigurationManager.ConfigurationKey;
 import fr.hermesdj.java.darkestdungeontranslationapp.Localization.LocalizationKey;
@@ -34,8 +39,8 @@ public class PropertiesPage extends JFrame {
 	 * 
 	 */
     private static final long serialVersionUID = -1708375186779889179L;
-    private static final Logger LOG = Logger.getLogger(PropertiesPage.class
-	    .toString());
+    private static final Logger LOG = LogManager
+	    .getLogger(PropertiesPage.class);
     private JPanel contentPane;
     private JTextField defaultFolderTxt;
     private JLabel lblLangageSource;
@@ -68,121 +73,31 @@ public class PropertiesPage extends JFrame {
 
 	contentPane = new JPanel();
 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-	setContentPane(contentPane);
-	contentPane.setLayout(null);
 
-	JLabel lblDefaultFolderLocation = new JLabel(
-		lang.getString(LocalizationKey.SETTINGS_DEFAULT_FOLDER_LABEL));
-	lblDefaultFolderLocation.setBounds(10, 11, 125, 14);
-	contentPane.add(lblDefaultFolderLocation);
+	JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+	tabbedPane.setBounds(0, 0, 591, 368);
 
-	defaultFolderTxt = new JTextField();
-	defaultFolderTxt.setBounds(138, 8, 401, 20);
-	contentPane.add(defaultFolderTxt);
-	defaultFolderTxt.setColumns(10);
-	defaultFolderTxt.setText(conf
-		.getProperty(ConfigurationKey.TRANSLATION_FILES_LOCATION));
+	tabbedPane.add(
+		lang.getString(LocalizationKey.SETTINGS_TAB_TRANSLATION_LABEL),
+		contentPane);
 
-	JButton folderSelectBtn = new JButton(new ImageIcon(getClass()
-		.getResource("/images/folder.png")));
-	folderSelectBtn.setBounds(549, 7, 25, 23);
-	folderSelectBtn.addActionListener(new ActionListener() {
-
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-		selectFile();
-	    }
-	});
-	contentPane.add(folderSelectBtn);
-
-	lblLangageSource = new JLabel(
-		lang.getString(LocalizationKey.SETTINGS_SOURCE_LANGUAGE_LABEL));
-	lblLangageSource.setHorizontalAlignment(SwingConstants.RIGHT);
-	lblLangageSource.setBounds(20, 52, 206, 14);
-	contentPane.add(lblLangageSource);
-
-	sourceLanguage = new JComboBox<String>();
-	sourceLanguage.setModel(new DefaultComboBoxModel(new String[] {
-		"english", "french", "italian", "german", "spanish" }));
-	sourceLanguage.setBounds(236, 49, 303, 20);
-	contentPane.add(sourceLanguage);
-	sourceLanguage.setSelectedItem(conf
-		.getProperty(ConfigurationKey.DEFAULT_ORIGINAL_LANGUAGE));
-
-	JLabel lblLangageCible = new JLabel(
-		lang.getString(LocalizationKey.SETTINGS_TRANSLATED_LANGUAGE_LABEL));
-	lblLangageCible.setHorizontalAlignment(SwingConstants.RIGHT);
-	lblLangageCible.setBounds(20, 90, 206, 14);
-	contentPane.add(lblLangageCible);
-
-	targetLanguage = new JComboBox<String>();
-	targetLanguage.setModel(new DefaultComboBoxModel(new String[] {
-		"english", "french", "italian", "german", "spanish" }));
-	targetLanguage.setSelectedIndex(1);
-	targetLanguage.setBounds(236, 87, 303, 20);
-	contentPane.add(targetLanguage);
-	targetLanguage.setSelectedItem(conf
-		.getProperty(ConfigurationKey.TRANSLATED_LANGUAGE));
-
-	JLabel lblMicrosoftAzureClient = new JLabel("Client ID");
-	lblMicrosoftAzureClient.setHorizontalAlignment(SwingConstants.RIGHT);
-	lblMicrosoftAzureClient.setBounds(102, 198, 125, 14);
-	contentPane.add(lblMicrosoftAzureClient);
-
-	clientIdTxt = new JTextField();
-	clientIdTxt.setBounds(237, 195, 302, 20);
-	contentPane.add(clientIdTxt);
-	clientIdTxt.setColumns(10);
-	clientIdTxt.setText(conf.getProperty(ConfigurationKey.AZURE_CLIENT_ID));
-
-	JLabel lblMicrosoftAzureSecret = new JLabel("Client Secret ");
-	lblMicrosoftAzureSecret.setHorizontalAlignment(SwingConstants.RIGHT);
-	lblMicrosoftAzureSecret.setBounds(85, 229, 142, 14);
-	contentPane.add(lblMicrosoftAzureSecret);
-
-	clientSecretTxt = new JPasswordField();
-	clientSecretTxt.setBounds(237, 226, 302, 20);
-	contentPane.add(clientSecretTxt);
-	clientSecretTxt.setColumns(10);
-	clientSecretTxt.setText(conf
-		.getProperty(ConfigurationKey.AZURE_CLIENT_SECRET));
-
-	JButton validationBtn = new JButton("OK");
-	validationBtn.setBounds(492, 334, 89, 23);
-	validationBtn.addActionListener(new ActionListener() {
-
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-		save();
-	    }
-	});
-	contentPane.add(validationBtn);
-
-	JSeparator separator = new JSeparator();
-	separator.setBounds(20, 141, 564, 2);
-	contentPane.add(separator);
-
-	JLabel lblIdentifiantsMicrosoftAzure = new JLabel(
-		lang.getString(LocalizationKey.AZURE_CLIENT_CREDENTIALS_TITLE));
-	lblIdentifiantsMicrosoftAzure
-		.setFont(new Font("Tahoma", Font.PLAIN, 14));
-	lblIdentifiantsMicrosoftAzure.setBounds(20, 154, 303, 33);
-	contentPane.add(lblIdentifiantsMicrosoftAzure);
-
-	JSeparator separator_1 = new JSeparator();
-	separator_1.setBounds(10, 271, 564, 14);
-	contentPane.add(separator_1);
+	JPanel appSettings = new JPanel();
+	tabbedPane.add(lang.getString(LocalizationKey.SETTINGS_TAB_APP_LABEL),
+		appSettings);
+	appSettings.setLayout(null);
 
 	JLabel lblLanguage = new JLabel(
 		lang.getString(LocalizationKey.SETTINGS_APPLICATION_LANGUAGE));
+	lblLanguage.setBounds(10, 37, 189, 14);
+	appSettings.add(lblLanguage);
 	lblLanguage.setHorizontalAlignment(SwingConstants.RIGHT);
-	lblLanguage.setBounds(20, 299, 206, 14);
-	contentPane.add(lblLanguage);
 
 	JComboBox comboBox = new JComboBox();
-	comboBox.setBounds(236, 296, 303, 20);
+	comboBox.setBounds(209, 34, 189, 20);
+	appSettings.add(comboBox);
 	comboBox.setModel(new DefaultComboBoxModel(lang.getAvailableLocales()));
 	comboBox.setSelectedItem(lang.getCurrentLocale().getDisplayLanguage());
+
 	comboBox.addActionListener(new ActionListener() {
 
 	    public void actionPerformed(ActionEvent e) {
@@ -220,7 +135,176 @@ public class PropertiesPage extends JFrame {
 
 	});
 
-	contentPane.add(comboBox);
+	JLabel lblTranslatedcolor = new JLabel(
+		lang.getString(LocalizationKey.SETTINGS_TRANSLATED_COLOR_LABEL));
+	lblTranslatedcolor.setHorizontalAlignment(SwingConstants.TRAILING);
+	lblTranslatedcolor.setBounds(10, 76, 189, 14);
+	appSettings.add(lblTranslatedcolor);
+
+	final JButton currentTranslatedColor = new JButton();
+	currentTranslatedColor.setLocation(209, 70);
+	currentTranslatedColor.setSize(20, 20);
+	currentTranslatedColor.setBackground(conf
+		.getColor(ConfigurationKey.DEFAULT_TRANSLATED_ROW_COLOR));
+	currentTranslatedColor.addActionListener(new ActionListener() {
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+		Color newColor = JColorChooser.showDialog(
+			PropertiesPage.this,
+			lang.getString(LocalizationKey.POPUP_COLOR_PICKER_TITLE),
+			conf.getColor(ConfigurationKey.DEFAULT_TRANSLATED_ROW_COLOR));
+
+		if (newColor != null) {
+		    conf.setProperty(
+			    ConfigurationKey.DEFAULT_TRANSLATED_ROW_COLOR,
+			    String.valueOf(newColor.getRGB()));
+		    conf.save();
+		    currentTranslatedColor.setBackground(newColor);
+		    main.repaint();
+		}
+	    }
+	});
+
+	appSettings.add(currentTranslatedColor);
+
+	JLabel lblUnTranslatedcolor = new JLabel(
+		lang.getString(LocalizationKey.SETTINGS_UNTRANSLATED_COLOR_LABEL));
+	lblUnTranslatedcolor.setHorizontalAlignment(SwingConstants.TRAILING);
+	lblUnTranslatedcolor.setBounds(10, 112, 189, 14);
+	appSettings.add(lblUnTranslatedcolor);
+
+	final JButton currentUnTranslatedColor = new JButton();
+	currentUnTranslatedColor.setLocation(209, 106);
+	currentUnTranslatedColor.setSize(20, 20);
+	currentUnTranslatedColor.setBackground(conf
+		.getColor(ConfigurationKey.DEFAULT_EMPTY_ROW_COLOR));
+
+	currentUnTranslatedColor.addActionListener(new ActionListener() {
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+		Color newColor = JColorChooser.showDialog(
+			PropertiesPage.this,
+			lang.getString(LocalizationKey.POPUP_COLOR_PICKER_TITLE),
+			conf.getColor(ConfigurationKey.DEFAULT_EMPTY_ROW_COLOR));
+
+		if (newColor != null) {
+		    conf.setProperty(ConfigurationKey.DEFAULT_EMPTY_ROW_COLOR,
+			    String.valueOf(newColor.getRGB()));
+		    conf.save();
+		    currentUnTranslatedColor.setBackground(newColor);
+		    main.repaint();
+		}
+	    }
+	});
+
+	appSettings.add(currentUnTranslatedColor);
+
+	setContentPane(tabbedPane);
+	contentPane.setLayout(null);
+
+	JLabel lblDefaultFolderLocation = new JLabel(
+		lang.getString(LocalizationKey.SETTINGS_DEFAULT_FOLDER_LABEL));
+	lblDefaultFolderLocation.setBounds(10, 11, 125, 14);
+	contentPane.add(lblDefaultFolderLocation);
+
+	defaultFolderTxt = new JTextField();
+	defaultFolderTxt.setBounds(138, 8, 401, 20);
+	contentPane.add(defaultFolderTxt);
+	defaultFolderTxt.setColumns(10);
+	defaultFolderTxt.setText(conf
+		.getProperty(ConfigurationKey.TRANSLATION_FILES_LOCATION));
+
+	JButton folderSelectBtn = new JButton(new ImageIcon(getClass()
+		.getResource("/images/folder.png")));
+	folderSelectBtn.setBounds(549, 7, 25, 23);
+	folderSelectBtn.addActionListener(new ActionListener() {
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+		selectFile();
+	    }
+	});
+	contentPane.add(folderSelectBtn);
+
+	lblLangageSource = new JLabel(
+		lang.getString(LocalizationKey.SETTINGS_SOURCE_LANGUAGE_LABEL));
+	lblLangageSource.setBounds(20, 52, 206, 14);
+	lblLangageSource.setHorizontalAlignment(SwingConstants.RIGHT);
+	contentPane.add(lblLangageSource);
+
+	sourceLanguage = new JComboBox<String>();
+	sourceLanguage.setBounds(236, 49, 303, 20);
+	sourceLanguage.setModel(new DefaultComboBoxModel(new String[] {
+		"english", "french", "italian", "german", "spanish" }));
+	contentPane.add(sourceLanguage);
+	sourceLanguage.setSelectedItem(conf
+		.getProperty(ConfigurationKey.DEFAULT_ORIGINAL_LANGUAGE));
+
+	JLabel lblLangageCible = new JLabel(
+		lang.getString(LocalizationKey.SETTINGS_TRANSLATED_LANGUAGE_LABEL));
+	lblLangageCible.setBounds(20, 90, 206, 14);
+	lblLangageCible.setHorizontalAlignment(SwingConstants.RIGHT);
+	contentPane.add(lblLangageCible);
+
+	targetLanguage = new JComboBox<String>();
+	targetLanguage.setBounds(236, 87, 303, 20);
+	targetLanguage.setModel(new DefaultComboBoxModel(new String[] {
+		"english", "french", "italian", "german", "spanish" }));
+	targetLanguage.setSelectedIndex(1);
+	contentPane.add(targetLanguage);
+	targetLanguage.setSelectedItem(conf
+		.getProperty(ConfigurationKey.TRANSLATED_LANGUAGE));
+
+	JLabel lblMicrosoftAzureClient = new JLabel("Client ID");
+	lblMicrosoftAzureClient.setBounds(102, 198, 125, 14);
+	lblMicrosoftAzureClient.setHorizontalAlignment(SwingConstants.RIGHT);
+	contentPane.add(lblMicrosoftAzureClient);
+
+	clientIdTxt = new JTextField();
+	clientIdTxt.setBounds(237, 195, 302, 20);
+	contentPane.add(clientIdTxt);
+	clientIdTxt.setColumns(10);
+	clientIdTxt.setText(conf.getProperty(ConfigurationKey.AZURE_CLIENT_ID));
+
+	JLabel lblMicrosoftAzureSecret = new JLabel("Client Secret ");
+	lblMicrosoftAzureSecret.setBounds(85, 229, 142, 14);
+	lblMicrosoftAzureSecret.setHorizontalAlignment(SwingConstants.RIGHT);
+	contentPane.add(lblMicrosoftAzureSecret);
+
+	clientSecretTxt = new JPasswordField();
+	clientSecretTxt.setBounds(237, 226, 302, 20);
+	contentPane.add(clientSecretTxt);
+	clientSecretTxt.setColumns(10);
+	clientSecretTxt.setText(conf
+		.getProperty(ConfigurationKey.AZURE_CLIENT_SECRET));
+
+	JButton validationBtn = new JButton("OK");
+	validationBtn.setBounds(492, 334, 89, 23);
+	validationBtn.addActionListener(new ActionListener() {
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+		save();
+	    }
+	});
+	contentPane.add(validationBtn);
+
+	JSeparator separator = new JSeparator();
+	separator.setBounds(20, 141, 564, 2);
+	contentPane.add(separator);
+
+	JLabel lblIdentifiantsMicrosoftAzure = new JLabel(
+		lang.getString(LocalizationKey.AZURE_CLIENT_CREDENTIALS_TITLE));
+	lblIdentifiantsMicrosoftAzure.setBounds(20, 154, 303, 33);
+	lblIdentifiantsMicrosoftAzure
+		.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	contentPane.add(lblIdentifiantsMicrosoftAzure);
+
+	JSeparator separator_1 = new JSeparator();
+	separator_1.setBounds(10, 271, 564, 14);
+	contentPane.add(separator_1);
 
 	chooser = new JFileChooser();
     }

@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -22,15 +21,17 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import fr.hermesdj.java.darkestdungeontranslationapp.Localization.LocalizationKey;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.hermesdj.java.darkestdungeontranslationapp.ConfigurationManager.ConfigurationKey;
+import fr.hermesdj.java.darkestdungeontranslationapp.Localization.LocalizationKey;
 
 public class AboutPage extends JFrame {
 
     private JPanel contentPane;
     private Localization lang;
-    private static final Logger LOG = Logger.getLogger(AboutPage.class
-	    .toString());
+    private static final Logger LOG = LogManager.getLogger(AboutPage.class);
 
     /**
      * Launch the application.

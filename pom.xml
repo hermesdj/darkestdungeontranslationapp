@@ -6,6 +6,14 @@
 	<version>0.0.4</version>
 	<name>Darkest Dungeon Translation Helper</name>
 	<description>App used to translate Darkest Dungeon</description>
+	
+	<repositories>
+		<repository>
+			<id>project.local</id>
+			<name>project</name>
+			<url>file:${project.basedir}/repo</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -28,6 +36,21 @@
 			<artifactId>microsoft-translator-java-api</artifactId>
 			<version>0.6.2</version>
 			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.inet</groupId>
+			<artifactId>jortho</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 

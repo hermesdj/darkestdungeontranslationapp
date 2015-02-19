@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import fr.hermesdj.java.darkestdungeontranslationapp.ConfigurationManager.ConfigurationKey;
 
 public class Localization {
     private static Localization INSTANCE;
-    private static final Logger LOG = Logger.getLogger(Localization.class
-	    .toString());
+    private static final Logger LOG = LogManager.getLogger(Localization.class);
 
     public List<Locale> availableLocales = new ArrayList<Locale>();
     private Locale currentLocale = new Locale("fr", "FR");
@@ -88,6 +89,9 @@ public class Localization {
 	MENU_EDIT_DELETE_TRANSLATION,
 	MENU_EDIT_TRANSLATION_HINT,
 	MENU_EDIT_ACCEPT_TRANSLATION,
+	MENU_EDIT_TRANSLATE_ALL,
+	MENU_EDIT_TRANSLATE_ALL_TOOLTIP,
+	MENU_EDIT_TRANSLATE_ALL_TOOLTIP_UNAVAILABLE,
 	MENU_EDIT_NEXT,
 	MENU_EDIT_PREVIOUS,
 	MENU_ABOUT,
@@ -114,6 +118,7 @@ public class Localization {
 	TABLE_ORIGINAL_COLUMN_LABEL,
 	TABLE_TRANSLATED_COLUMN_LABEL,
 	STATUS_TRANSLATION_PROGRESS,
+	TOOLBAR_COLOR_TABLE_TOOLTIP,
 
 	/* ABOUT */
 	ABOUT_PAGE_TITLE,
@@ -128,12 +133,19 @@ public class Localization {
 	SETTINGS_DEFAULT_FOLDER_LABEL,
 	SETTINGS_SOURCE_LANGUAGE_LABEL,
 	SETTINGS_TRANSLATED_LANGUAGE_LABEL,
+	SETTINGS_TAB_TRANSLATION_LABEL,
+	SETTINGS_TAB_APP_LABEL,
+	SETTINGS_TRANSLATED_COLOR_LABEL,
+	SETTINGS_UNTRANSLATED_COLOR_LABEL,
 	AZURE_CLIENT_CREDENTIALS_TITLE,
 	SETTINGS_APPLICATION_LANGUAGE,
 	POPUP_CHANGE_LANGUAGE_DESC,
 	POPUP_CHANGE_LANGUAGE_TITLE,
 	POPUP_CHANGE_LANGUAGE_YES,
 	POPUP_CHANGE_LANGUAGE_NO,
-	POPUP_CHANGE_LANGUAGE_CANCEL
+	POPUP_CHANGE_LANGUAGE_CANCEL,
+	POPUP_TRANSLATE_ALL_DESC,
+	POPUP_TRANSLATE_ALL_TITLE,
+	POPUP_COLOR_PICKER_TITLE
     }
 }

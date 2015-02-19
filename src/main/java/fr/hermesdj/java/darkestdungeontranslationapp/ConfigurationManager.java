@@ -1,5 +1,6 @@
 package fr.hermesdj.java.darkestdungeontranslationapp;
 
+import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -84,11 +85,23 @@ public class ConfigurationManager {
 	AZURE_CLIENT_ID,
 	AZURE_CLIENT_SECRET,
 	APPLICATION_VERSION,
-	DEFAULT_APPLICATION_LANGUAGE
+	DEFAULT_APPLICATION_LANGUAGE,
+	DEFAULT_EMPTY_ROW_COLOR,
+	DEFAULT_TRANSLATED_ROW_COLOR
     }
 
     public Boolean getBoolean(ConfigurationKey key, boolean b) {
 	return prop.getBoolean(key.name(), b);
+    }
+
+    public Color getColor(ConfigurationKey key) {
+	Color color = null;
+
+	int colorrgb = prop.getInt(key.name());
+
+	color = new Color(colorrgb, true);
+
+	return color;
     }
 
 }

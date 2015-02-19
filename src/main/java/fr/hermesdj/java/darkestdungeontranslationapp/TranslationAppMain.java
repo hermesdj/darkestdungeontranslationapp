@@ -2,6 +2,7 @@ package fr.hermesdj.java.darkestdungeontranslationapp;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -25,7 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -44,6 +45,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -63,14 +65,15 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.JDOMException;
 import org.jdom2.filter.Filters;
-import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.jdom2.xpath.XPathExpression;
@@ -83,13 +86,10 @@ import fr.hermesdj.java.darkestdungeontranslationapp.ConfigurationManager.Config
 import fr.hermesdj.java.darkestdungeontranslationapp.Localization.LocalizationKey;
 
 public class TranslationAppMain extends JFrame {
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = 8925633482064125521L;
 
-    private static final Logger LOG = Logger.getLogger(TranslationAppMain.class
-	    .toString());
+    private static final Logger LOG = LogManager
+	    .getLogger(TranslationAppMain.class);
     private JTextArea originalTextArea = new JTextArea();
     private JTextArea translatedTextArea = new JTextArea();
     private JFileChooser chooser = new JFileChooser();
@@ -125,6 +125,20 @@ public class TranslationAppMain extends JFrame {
     private GridBagConstraints c_5;
     private Localization lang;
 
+    private boolean isTranslatorAvailable = false;
+
+    private JMenuItem translateAllItem = new JMenuItem();
+
+    private JMenuItem translationHintMenu;
+
+    private JMenuItem acceptTranslationHintMenu;
+
+    private JButton getHintBtn;
+
+    private JButton copyHintBtn;
+
+    protected boolean isTableColored = false;
+
     public static void main(String[] args) {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
@@ -133,7 +147,8 @@ public class TranslationAppMain extends JFrame {
 		    TranslationAppMain window = new TranslationAppMain();
 		    window.setVisible(true);
 		} catch (Exception e) {
-		    e.printStackTrace();
+		    LOG.error(e.getMessage(), e);
+		    ;
 		}
 	    }
 	});
@@ -141,6 +156,61 @@ public class TranslationAppMain extends JFrame {
 
     public TranslationAppMain() {
 	initialize();
+	postInitialize();
+    }
+
+    private void postInitialize() {
+	SwingWorker translatorWorker = new SwingWorker<Boolean, Void>() {
+
+	    @Override
+	    protected Boolean doInBackground() throws Exception {
+		LOG.info("Testing if Bing Translator is available");
+		Boolean isTranslatorAvailable;
+		try {
+		    Translate.execute("test string", Language.ENGLISH);
+		    isTranslatorAvailable = true;
+		} catch (Exception e) {
+		    LOG.error("Unable to contact Translator Servers", e);
+		    isTranslatorAvailable = false;
+		    ;
+		}
+
+		return isTranslatorAvailable;
+	    }
+
+	    @Override
+	    public void done() {
+		try {
+		    isTranslatorAvailable = get();
+		    translateAllItem.setEnabled(isTranslatorAvailable);
+		    translationHintMenu.setEnabled(isTranslatorAvailable);
+		    acceptTranslationHintMenu.setEnabled(isTranslatorAvailable);
+		    getHintBtn.setEnabled(isTranslatorAvailable);
+		    copyHintBtn.setEnabled(isTranslatorAvailable);
+
+		    if (isTranslatorAvailable) {
+			LOG.info("Bing Translator is available.");
+			translateAllItem
+				.setToolTipText(lang
+					.getString(LocalizationKey.MENU_EDIT_TRANSLATE_ALL_TOOLTIP));
+		    } else {
+			LOG.error("Bing Translator is not available.");
+			translateAllItem
+				.setToolTipText(lang
+					.getString(LocalizationKey.MENU_EDIT_TRANSLATE_ALL_TOOLTIP_UNAVAILABLE));
+		    }
+		} catch (InterruptedException e) {
+		    LOG.error(e.getMessage(), e);
+		    ;
+		} catch (ExecutionException e) {
+		    LOG.error(e.getMessage(), e);
+		    ;
+		}
+	    }
+
+	};
+
+	translatorWorker.execute();
     }
 
     public void initializeProperties() {
@@ -159,16 +229,20 @@ public class TranslationAppMain extends JFrame {
 		ConfigurationKey.DEFAULT_BLANK_ONLY, false);
 	blankTranslateCheckbox.setSelected(blankOnly);
 
+	lang = Localization.getInstance();
+
 	Translate.setClientId(conf
 		.getProperty(ConfigurationKey.AZURE_CLIENT_ID));
 	Translate.setClientSecret(conf
 		.getProperty(ConfigurationKey.AZURE_CLIENT_SECRET));
 
-	lang = Localization.getInstance();
-
 	if (!sourceDirectory.exists()) {
 	    selectFileFolder();
 	}
+
+	// SpellChecker.registerDictionaries(
+	// getClass().getResource("/dictionaries/"), "en,fr,de,it,es", "en");
+
     }
 
     private void initialize() {
@@ -274,6 +348,15 @@ public class TranslationAppMain extends JFrame {
 	    }
 	};
 
+	Action translateAll = new AbstractAction() {
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+		translateAll();
+	    }
+
+	};
+
 	// Configure Menu
 
 	// FICHIER
@@ -355,22 +438,24 @@ public class TranslationAppMain extends JFrame {
 		KeyEvent.VK_DELETE, KeyEvent.ALT_MASK));
 	modifier.add(clearTranslationItem);
 
-	JMenuItem translationHintMenu = new JMenuItem(
+	translationHintMenu = new JMenuItem(
 		lang.getString(LocalizationKey.MENU_EDIT_TRANSLATION_HINT),
 		new ImageIcon(getClass().getResource("/images/lightbulb.png")));
 	translationHintMenu.setPreferredSize(new Dimension(250, 20));
 	translationHintMenu.addActionListener(showHintAction);
 	translationHintMenu.setAccelerator(KeyStroke.getKeyStroke(
 		KeyEvent.VK_ENTER, KeyEvent.ALT_MASK));
+	translationHintMenu.setEnabled(false);
 	modifier.add(translationHintMenu);
 
-	JMenuItem acceptTranslationHintMenu = new JMenuItem(
+	acceptTranslationHintMenu = new JMenuItem(
 		lang.getString(LocalizationKey.MENU_EDIT_ACCEPT_TRANSLATION),
 		new ImageIcon(getClass().getResource(
 			"/images/lightbulb_add.png")));
 	acceptTranslationHintMenu.setPreferredSize(new Dimension(250, 20));
 	acceptTranslationHintMenu
 		.addActionListener(acceptTranslationHintAction);
+	acceptTranslationHintMenu.setEnabled(false);
 	acceptTranslationHintMenu.setAccelerator(KeyStroke.getKeyStroke(
 		KeyEvent.VK_ENTER, Toolkit.getDefaultToolkit()
 			.getMenuShortcutKeyMask()));
@@ -392,6 +477,17 @@ public class TranslationAppMain extends JFrame {
 	precedentMenu.setAccelerator(KeyStroke.getKeyStroke(
 		KeyEvent.VK_PAGE_UP, 0));
 	modifier.add(precedentMenu);
+	modifier.add(new JSeparator());
+
+	translateAllItem.setText(lang
+		.getString(LocalizationKey.MENU_EDIT_TRANSLATE_ALL));
+	translateAllItem.setIcon(new ImageIcon(getClass().getResource(
+		"/images/lightning.png")));
+	translateAllItem.addActionListener(translateAll);
+	translateAllItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12,
+		Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+	translateAllItem.setEnabled(isTranslatorAvailable);
+	modifier.add(translateAllItem);
 
 	JMenu about = new JMenu(lang.getString(LocalizationKey.MENU_ABOUT));
 	menuBar.add(about);
@@ -459,20 +555,33 @@ public class TranslationAppMain extends JFrame {
 
 	toolbar.add(reloadFileTool);
 
-	blankTranslateCheckbox.addActionListener(new ActionListener() {
-
-	    public void actionPerformed(ActionEvent e) {
-		JCheckBox box = (JCheckBox) e.getSource();
-		conf.setProperty(ConfigurationKey.DEFAULT_BLANK_ONLY,
-			String.valueOf(box.isSelected()));
-		conf.save();
-		changeFile(currentEditedFile, box.isSelected());
-	    }
-	});
 	blankTranslateCheckbox.setToolTipText(lang
 		.getString(LocalizationKey.BLANK_ONLY_TOOLTIP));
-
+	blankTranslateCheckbox.setSelectedIcon(new ImageIcon(getClass()
+		.getResource("/images/tag_green.png")));
+	blankTranslateCheckbox.setIcon(new ImageIcon(getClass().getResource(
+		"/images/tag_red.png")));
 	toolbar.add(blankTranslateCheckbox);
+
+	JCheckBox colorTable = new JCheckBox();
+	colorTable.setToolTipText(lang
+		.getString(LocalizationKey.TOOLBAR_COLOR_TABLE_TOOLTIP));
+	colorTable.setIcon(new ImageIcon(getClass().getResource(
+		"/images/flag_red.png")));
+	colorTable.setSelectedIcon(new ImageIcon(getClass().getResource(
+		"/images/flag_green.png")));
+	colorTable.setSelected(isTableColored);
+
+	colorTable.addActionListener(new ActionListener() {
+
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+		isTableColored = ((JCheckBox) e.getSource()).isSelected();
+		table.repaint();
+	    }
+	});
+
+	toolbar.add(colorTable);
 
 	JComboBox<String> fileSelector = new JComboBox<String>();
 	fileSelector.setModel(new DefaultComboBoxModel<String>(
@@ -527,6 +636,30 @@ public class TranslationAppMain extends JFrame {
 
 		return tip;
 	    }
+
+	    public Component prepareRenderer(TableCellRenderer renderer,
+		    int row, int column) {
+		Component c = super.prepareRenderer(renderer, row, column);
+
+		if (!isRowSelected(row) && isTableColored) {
+		    c.setBackground(getBackground());
+		    int modelRow = convertRowIndexToModel(row);
+		    String value = (String) getModel().getValueAt(modelRow, 1);
+		    if (value.trim().equals("")) {
+			c.setBackground(conf
+				.getColor(ConfigurationKey.DEFAULT_EMPTY_ROW_COLOR));
+		    } else {
+			c.setBackground(conf
+				.getColor(ConfigurationKey.DEFAULT_TRANSLATED_ROW_COLOR));
+		    }
+		}
+
+		if (!isTableColored && !isRowSelected(row)) {
+		    c.setBackground(null);
+		}
+
+		return c;
+	    }
 	};
 
 	// Filtrage
@@ -545,6 +678,27 @@ public class TranslationAppMain extends JFrame {
 		}
 	    }
 	};
+
+	blankTranslateCheckbox.addActionListener(new ActionListener() {
+
+	    public void actionPerformed(ActionEvent e) {
+		JCheckBox box = (JCheckBox) e.getSource();
+
+		if (box.isSelected()) {
+		    sorter.setRowFilter(new RowFilter<Object, Object>() {
+
+			@Override
+			public boolean include(Entry entry) {
+			    return ((String) entry.getValue(1)).trim().equals(
+				    "");
+			}
+		    });
+		} else {
+		    sorter.setRowFilter(null);
+		}
+	    }
+	});
+
 	searchButton.addActionListener(searchAction);
 	InputMap searchInput = searchField.getInputMap();
 	KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
@@ -586,16 +740,19 @@ public class TranslationAppMain extends JFrame {
 	translationToolBar.add(nextItem);
 	translationToolBar.add(new JSeparator());
 
-	JButton getHintBtn = new JButton(new ImageIcon(getClass().getResource(
+	getHintBtn = new JButton(new ImageIcon(getClass().getResource(
 		"/images/lightbulb.png")));
 	getHintBtn.setToolTipText(lang
 		.getString(LocalizationKey.HINT_BUTTON_TOOLTIP));
+	getHintBtn.setEnabled(false);
 	getHintBtn.addActionListener(showHintAction);
 	translationToolBar.add(getHintBtn);
 	translationToolBar.setFloatable(false);
 
-	JButton copyHintBtn = new JButton(new ImageIcon(getClass().getResource(
+	copyHintBtn = new JButton(new ImageIcon(getClass().getResource(
 		"/images/lightbulb_add.png")));
+	copyHintBtn.setEnabled(false);
+
 	copyHintBtn.setToolTipText(lang
 		.getString(LocalizationKey.ACCEPT_HINT_BUTTON_TOOLTIP));
 	copyHintBtn.addActionListener(acceptTranslationHintAction);
@@ -610,6 +767,7 @@ public class TranslationAppMain extends JFrame {
 	translationArea.add(translationToolBar, c_2);
 
 	idField = new JTextField();
+	idField.setEditable(false);
 	idField.setBackground(new Color(224, 224, 224));
 	GridBagConstraints c = new GridBagConstraints();
 	c.anchor = GridBagConstraints.SOUTH;
@@ -635,13 +793,13 @@ public class TranslationAppMain extends JFrame {
 	c_1.gridy = 1;
 
 	translationArea.add(translationPanel, c_1);
+	originalTextArea.setEditable(false);
 	originalTextArea.setWrapStyleWord(true);
 	originalTextArea.setLineWrap(true);
 
 	originalTextArea.setBackground(new Color(224, 224, 224));
 	originalTextArea.setDisabledTextColor(Color.BLACK);
 	originalTextArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-	originalTextArea.setEnabled(false);
 	translatedTextArea.setWrapStyleWord(true);
 
 	translatedTextArea.setBackground(new Color(229, 255, 204));
@@ -675,6 +833,7 @@ public class TranslationAppMain extends JFrame {
 	translationPanel.add(translatedTextArea);
 
 	hintArea = new JTextArea();
+	hintArea.setEditable(false);
 	hintArea.setBackground(new Color(224, 224, 224));
 	hintArea.setLineWrap(true);
 	hintArea.setDisabledTextColor(Color.BLACK);
@@ -729,6 +888,21 @@ public class TranslationAppMain extends JFrame {
 	progressBar.setStringPainted(true);
 	progressBar.setAlignmentX(JProgressBar.RIGHT_ALIGNMENT);
 	statusBar.add(progressBar);
+    }
+
+    protected void translateAll() {
+	Object[] options = {
+		lang.getString(LocalizationKey.POPUP_CHANGE_LANGUAGE_YES),
+		lang.getString(LocalizationKey.POPUP_CHANGE_LANGUAGE_NO) };
+	int n = JOptionPane.showOptionDialog(this,
+		lang.getString(LocalizationKey.POPUP_TRANSLATE_ALL_DESC),
+		lang.getString(LocalizationKey.POPUP_TRANSLATE_ALL_TITLE),
+		JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+		options, options[0]);
+
+	if (n == 0) {
+
+	}
     }
 
     protected void deleteTranslation() {
@@ -801,7 +975,7 @@ public class TranslationAppMain extends JFrame {
 		true)));
     }
 
-    private void initTable() {
+    public void initTable(Vector<Vector<String>> tableData) {
 
 	DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 	Vector<String> columnsNames = new Vector<String>();
@@ -850,6 +1024,10 @@ public class TranslationAppMain extends JFrame {
 			}
 		    }
 		});
+
+	if (table.getModel().getRowCount() > 0) {
+	    table.setRowSelectionInterval(0, 0);
+	}
     }
 
     private String[] getFileList(File sourceDirectory) {
@@ -858,7 +1036,8 @@ public class TranslationAppMain extends JFrame {
 
     public void loadFileContent(File file, boolean blankOnly) {
 	this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-	loadFileTask = new LoadFileTask(file, blankOnly);
+	loadFileTask = new LoadFileTask(this, file, progressBar, tableData,
+		currentDocument, original_language, translation_language);
 	loadFileTask.addPropertyChangeListener(new PropertyChangeListener() {
 
 	    public void propertyChange(PropertyChangeEvent evt) {
@@ -869,106 +1048,6 @@ public class TranslationAppMain extends JFrame {
 	    }
 	});
 	loadFileTask.execute();
-    }
-
-    class LoadFileTask extends SwingWorker<Void, Void> {
-	private File file;
-	private boolean blankOnly;
-
-	public LoadFileTask(File file, boolean blankOnly) {
-	    this.file = file;
-	    this.blankOnly = blankOnly;
-	    progressBar.setValue(0);
-	    setProgress(0);
-	}
-
-	@Override
-	protected Void doInBackground() throws Exception {
-
-	    try {
-		LOG.info("Loading translation file " + file);
-
-		SAXBuilder builder = new SAXBuilder();
-
-		showLog("Loading File...");
-
-		currentDocument = (Document) builder.build(file);
-		Element root = currentDocument.getRootElement();
-
-		LOG.info("Parsing source language " + original_language);
-
-		XPathExpression<Element> browseOriginal = xFactory.compile(
-			"//language[@id='" + original_language
-				+ "']/entry[string-length(@id) > 0]/.[text()]",
-			Filters.element());
-
-		List<Element> originalElements = browseOriginal.evaluate(root);
-		LOG.info("This file contains " + originalElements.size()
-			+ " elements to translate.");
-
-		showLog("Parsing " + originalElements.size() + " elements...");
-
-		tableData = new Vector<Vector<String>>();
-		int i = 0;
-		int subid = 0;
-		String lastid = "";
-		for (Element el : originalElements) {
-		    String id = el.getAttributeValue("id");
-
-		    List<Element> elems = xFactory.compile(
-			    "//language[@id='" + translation_language
-				    + "']/entry[@id='" + id + "']",
-			    Filters.element()).evaluate(root);
-
-		    if (id.equals(lastid)) {
-			subid++;
-		    } else {
-			subid = 0;
-		    }
-
-		    if (!elems.get(subid).getText().isEmpty() && blankOnly) {
-			continue;
-		    }
-
-		    Vector<String> vector = new Vector<String>();
-		    vector.add(el.getText());
-		    vector.add(elems.get(subid).getText());
-		    vector.add(id);
-		    vector.add(String.valueOf(subid));
-
-		    tableData.add(vector);
-
-		    Double progress = Math
-			    .ceil(((double) i / (double) originalElements
-				    .size()) * 100);
-
-		    setProgress(progress.intValue());
-		    i++;
-		    lastid = id;
-		}
-	    } catch (JDOMException e) {
-		e.printStackTrace();
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    } catch (RuntimeException e) {
-		e.printStackTrace();
-	    }
-
-	    return null;
-	}
-
-	@Override
-	protected void done() {
-	    initTable();
-	    showLog(lang.getString(LocalizationKey.STATUS_DONE_LOADING));
-	    updateTranslationProgress();
-	    TranslationAppMain.this.setCursor(null);
-	    if (table.getModel().getRowCount() > 0) {
-		table.setRowSelectionInterval(0, 0);
-	    }
-	    super.done();
-	    LOG.info("Done loading file content !");
-	}
     }
 
     protected void saveTranslation() {
@@ -982,7 +1061,7 @@ public class TranslationAppMain extends JFrame {
 			    + File.separatorChar + currentEditedFile));
 	} catch (IOException e) {
 	    showLog("File saving error, please check logfile");
-	    e.printStackTrace();
+	    LOG.error(e.getMessage(), e);
 	}
     }
 
@@ -1048,5 +1127,19 @@ public class TranslationAppMain extends JFrame {
 	currentEditedFile = selectedItem;
 	loadFileContent(new File(sourceDirectory.getAbsolutePath()
 		+ File.separatorChar + currentEditedFile), blankOnly);
+    }
+
+    public void doneLoadingFile(Vector<Vector<String>> tableData,
+	    Document currentDocument) {
+	this.currentDocument = currentDocument;
+	this.tableData = tableData;
+
+	initTable(tableData);
+	showLog(lang.getString(LocalizationKey.STATUS_DONE_LOADING));
+	updateTranslationProgress();
+	setCursor(null);
+	progressBar.setValue(0);
+	LOG.info("Done loading file content !");
+
     }
 }

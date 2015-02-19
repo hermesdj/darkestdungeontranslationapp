@@ -1,0 +1,11 @@
+2015-02-19 17:48:19.049 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Launching main window...
+2015-02-19 17:48:19.332 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.Localization - Stored locale is fr_FR
+2015-02-19 17:48:19.336 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.Localization - Changed current locale to français
+2015-02-19 17:48:19.336 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.Localization - Using locale fr
+2015-02-19 17:48:19.340 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - File edited is : activity_log.string_table.xml
+2015-02-19 17:48:19.347 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Loading translation file D:\Users\jdallard\Documents\GitHub\DarkestDungeonFr\localization - FR\activity_log.string_table.xml
+2015-02-19 17:48:19.498 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing source language english
+2015-02-19 17:48:19.597 [SwingWorker-pool-4-thread-2] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Testing if Bing Translator is available
+2015-02-19 17:48:19.751 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - This file contains 299 elements to translate.
+2015-02-19 17:48:19.751 [SwingWorker-pool-4-thread-1] INFO  fr.hermesdj.java.darkestdungeontranslationapp.LoadFileTask - Parsing 299 elements...
+2015-02-19 17:48:20.338 [AWT-EventQueue-0] INFO  fr.hermesdj.java.darkestdungeontranslationapp.TranslationAppMain - Done loading file content !
