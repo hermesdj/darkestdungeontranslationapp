@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
@@ -185,15 +186,36 @@ public class PropertiesPage extends JFrame {
 	comboBox.addActionListener(new ActionListener() {
 
 	    public void actionPerformed(ActionEvent e) {
-		JComboBox<String> cb = (JComboBox<String>) e.getSource();
-		Locale locale = lang.availableLocales.get(cb.getSelectedIndex());
+		Object[] options = {
+			lang.getString(LocalizationKey.POPUP_CHANGE_LANGUAGE_YES),
+			lang.getString(LocalizationKey.POPUP_CHANGE_LANGUAGE_NO),
+			lang.getString(LocalizationKey.POPUP_CHANGE_LANGUAGE_CANCEL) };
 
-		lang.setCurrentLocale(locale);
-		ResourceBundle.clearCache();
+		int r = JOptionPane.showOptionDialog(
+			PropertiesPage.this,
+			lang.getString(LocalizationKey.POPUP_CHANGE_LANGUAGE_DESC),
+			lang.getString(LocalizationKey.POPUP_CHANGE_LANGUAGE_TITLE),
+			JOptionPane.YES_NO_CANCEL_OPTION,
+			JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 
-		conf.setProperty(ConfigurationKey.DEFAULT_APPLICATION_LANGUAGE,
-			locale.getLanguage() + "_" + locale.getCountry());
-		conf.save();
+		if (r != 2) {
+		    JComboBox<String> cb = (JComboBox<String>) e.getSource();
+		    Locale locale = lang.availableLocales.get(cb
+			    .getSelectedIndex());
+
+		    lang.setCurrentLocale(locale);
+		    ResourceBundle.clearCache();
+
+		    conf.setProperty(
+			    ConfigurationKey.DEFAULT_APPLICATION_LANGUAGE,
+			    locale.getLanguage() + "_" + locale.getCountry());
+		    conf.save();
+
+		    if (r == 0) {
+			System.exit(0);
+		    }
+		}
+
 	    }
 
 	});

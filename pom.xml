@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.hermesdj.java</groupId>
 	<artifactId>DarkestDungeonTranslationHelper</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<name>Darkest Dungeon Translation Helper</name>
 	<description>App used to translate Darkest Dungeon</description>
 
