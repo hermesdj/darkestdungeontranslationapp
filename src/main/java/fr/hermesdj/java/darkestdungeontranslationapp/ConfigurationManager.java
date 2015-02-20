@@ -87,7 +87,9 @@ public class ConfigurationManager {
 	APPLICATION_VERSION,
 	DEFAULT_APPLICATION_LANGUAGE,
 	DEFAULT_EMPTY_ROW_COLOR,
-	DEFAULT_TRANSLATED_ROW_COLOR
+	DEFAULT_TRANSLATED_ROW_COLOR,
+	HTTP_PROXY_HOST,
+	HTTP_PROXY_PORT
     }
 
     public Boolean getBoolean(ConfigurationKey key, boolean b) {
