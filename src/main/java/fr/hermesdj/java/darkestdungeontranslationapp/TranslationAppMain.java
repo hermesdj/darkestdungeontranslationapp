@@ -722,6 +722,14 @@ public class TranslationAppMain extends JFrame {
 		} else {
 		    sorter.setRowFilter(RowFilter.regexFilter(text));
 		}
+		if (table.getModel().getRowCount() > 0) {
+		    try {
+			table.getSelectionModel().setSelectionInterval(0, 0);
+			scrollToRow(0);
+		    } catch (ArrayIndexOutOfBoundsException e1) {
+			LOG.warn("Cannot select first row, the table is not displaying any... ");
+		    }
+		}
 	    }
 	};
 
@@ -746,6 +754,7 @@ public class TranslationAppMain extends JFrame {
 		if (table.getModel().getRowCount() > 0) {
 		    try {
 			table.getSelectionModel().setSelectionInterval(0, 0);
+			scrollToRow(0);
 		    } catch (ArrayIndexOutOfBoundsException e1) {
 			LOG.warn("Cannot select first row, the table is not displaying any... ");
 		    }
@@ -1059,10 +1068,10 @@ public class TranslationAppMain extends JFrame {
 
     protected void deleteTranslation() {
 	translatedTextArea.setText("");
-	int currentSelected = table.getSelectedRow();
-	String id = (String) table.getModel().getValueAt(currentSelected, 2);
-	int subid = Integer.valueOf((String) table.getModel().getValueAt(
-		currentSelected, 3));
+
+	String id = idField.getText();
+	Integer subid = Integer.valueOf((String) table.getModel().getValueAt(
+		table.convertRowIndexToModel(table.getSelectedRow()), 3));
 	clearTranslationItem(id, subid);
 	updateTranslationProgress();
     }
@@ -1084,10 +1093,17 @@ public class TranslationAppMain extends JFrame {
     }
 
     protected void acceptTranslation() {
-	int currentSelected = table.getSelectedRow();
+	int currentSelected = table.convertRowIndexToModel(table
+		.getSelectedRow());
+
+	LOG.debug("Current row selected in model is " + currentSelected);
+	LOG.debug("Current row selected in table is " + table.getSelectedRow());
+
 	String id = (String) table.getModel().getValueAt(currentSelected, 2);
 	int subid = Integer.valueOf((String) table.getModel().getValueAt(
 		currentSelected, 3));
+
+	LOG.debug("id : " + id + ":" + subid);
 
 	saveTranslationItem(translatedTextArea.getText(), id, subid);
 
@@ -1100,7 +1116,7 @@ public class TranslationAppMain extends JFrame {
 
     protected void saveTranslationItem(String text, String id, int subid) {
 	table.getModel().setValueAt(translatedTextArea.getText(),
-		table.getSelectedRow(), 1);
+		table.convertRowIndexToModel(table.getSelectedRow()), 1);
 
 	if (text.isEmpty() || id.isEmpty()) {
 	    return;
@@ -1176,6 +1192,17 @@ public class TranslationAppMain extends JFrame {
 
 			    idField.setText(table.getValueAt(
 				    table.getSelectedRow(), 2).toString());
+
+			    LOG.debug("Current row selected in model is "
+				    + table.convertRowIndexToModel(table
+					    .getSelectedRow()));
+			    LOG.debug("Current row selected in table is "
+				    + table.getSelectedRow());
+			    LOG.debug("Data is "
+				    + idField.getText()
+				    + ":"
+				    + table.getModel().getValueAt(
+					    table.getSelectedRow(), 3));
 			}
 		    }
 		});

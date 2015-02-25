@@ -1,3 +1,2 @@
 - Labels sur champs dans zone de traduction
 - Paufiner les tooltips et la traduction de l'application
-- Bug possible lorsque la table est filtrée. A regarder
